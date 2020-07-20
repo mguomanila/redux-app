@@ -3,24 +3,22 @@ import ReactDOM from 'react-dom';
 
 import './css/index.less';
 import App from './app/App';
-import store from './app/store';
+import store from './stores/store';
 
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter, Route} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-     <Router>
+     <BrowserRouter>
       <Suspense fallback={<div>Loading..</div>}>
-       <Switch>
         <Route exact path="/">
           <App />
         </Route>
-       </Switch>
       </Suspense>
-     </Router>
+     </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
