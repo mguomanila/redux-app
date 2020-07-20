@@ -1,15 +1,26 @@
-import React from 'react';
+import React, {Suspense, lazy} from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+
+import './css/index.less';
+import App from './app/App';
 import store from './app/store';
+
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+     <Router>
+      <Suspense fallback={<div>Loading..</div>}>
+       <Switch>
+        <Route exact path="/">
+          <App />
+        </Route>
+       </Switch>
+      </Suspense>
+     </Router>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
