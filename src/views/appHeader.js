@@ -1,8 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default class extends React.Component{
-  render(){
+export default function(){
     return (
       <header className="app-header">
         <Link to="/">
