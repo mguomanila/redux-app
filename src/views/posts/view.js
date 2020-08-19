@@ -3,12 +3,11 @@ import React from 'react'
 const app = props => {
   
   return (
-    <ul className="user-list">
-      <li>
-        user list
-      </li>
-    </ul>
+    <div className="post-view-full">
+      post view
+    </div>
   )
 }
 
 export default app
+ 

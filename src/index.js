@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import './css/index.less';
-import App from './app/App';
-import store from './stores/store';
+import 'APPSRC/style/index.less';
+import App from 'APPSRC/app/main';
+import store from 'APPSRC/stores/store';
 
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
