@@ -68,7 +68,7 @@ export default {
   },
   hasItem: function(sKey){
     if(!sKey){ return false }
-    return (new RexExp(
+    return (new RegExp(
       "(?:^|;\\s*)" 
       + encodeURIComponent(sKey)
         .replace(/[\-\.\+\*]/g, "\\$&")

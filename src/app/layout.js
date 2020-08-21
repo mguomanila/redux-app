@@ -1,6 +1,6 @@
 import React from 'react'
 
-import 'APPSRC/style/app.less'
+import  'APPSRC/style/app.less'
 import AppHeader from 'APPSRC/views/appHeader'
 
 // Components must be uppercase - regular DOM

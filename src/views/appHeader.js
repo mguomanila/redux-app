@@ -6,7 +6,7 @@ const app = props => {
   return (
     <header className="app-header">
       <Link to="/">
-        <h1>&#923;eneid</h1>
+        <h1>ph&#923;edrus</h1>
       </Link>
       <section className="account-ctrl">
         <Link to="/users/create">Join</Link>

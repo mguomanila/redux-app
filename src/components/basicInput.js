@@ -4,25 +4,28 @@ import update from 'react-addons-update'
 import ClassNames from 'classnames'
 
 
-export default class extends React.Component{
-  static propTypes = {
-    helpText: PropTypes.string,
-    error: PropTypes.string
-  }
-  render(){
-    const { helpText, error } = this.props
-    return (
-      <div className={ClassNames({
-        'basic-input': true,
-        'error': error
-      })} {...this.props}>
-        <input className={error ? 'error' : ''}
-        {...update(this.props, {
-          children: {$set: null}
-        })}/> 
-        {this.props.children}
-        <aside>{helpText || error}</aside>
-      </div>
-    )
-  }
+const app = props => {
+  const { helpText, error } = props
+  
+  return (
+    <div className={ClassNames({
+      'basic-input': true,
+      'error': error
+    })} {...props}>
+      <input className={error ? 'error' : ''}
+      {...update(props, {
+        children: {$set: null}
+      })}/> 
+      {props.children}
+      <aside>{helpText || error}</aside>
+    </div>
+  )
 }
+
+// enforce props types
+app.propTypes = {
+  helpText: PropTypes.string,
+  error: PropTypes.string
+}
+
+export default app
