@@ -50,7 +50,7 @@ const getResponseResolver = state => {
 
 export const getSessionContext =  state => state.session.context
 
-export const getSessionInfo = () => JSON.parse(Cookie.getItem('session'))
+export const populateSessionInfo = () => JSON.parse(Cookie.getItem('session'))
 
 export const {
   getPost, modifyPost,

@@ -15,7 +15,7 @@ const history = createBrowserHistory()
 export default function(props){
   const dispatch = useDispatch()
   const state = useSelector(sessionContextReduce)
-  
+  console.log({state})
   const login = e => {
     const detail = {}
     Array
