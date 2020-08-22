@@ -4,7 +4,7 @@ import update from 'react-addons-update'
 import ClassNames from 'classnames'
 
 
-const app = props => {
+function app(props) {
   const { helpText, error } = props
   
   return (
@@ -25,7 +25,7 @@ const app = props => {
 // enforce props types
 app.propTypes = {
   helpText: PropTypes.string,
-  error: PropTypes.string
+  error: PropTypes.bool
 }
 
 export default app

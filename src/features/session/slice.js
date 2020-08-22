@@ -14,10 +14,6 @@ export const counterSlice = createSlice({
     },
   },
   reducers: {
-    getInitialState: state => (Object.assign(
-      state.context, 
-      JSON.parse(Cookie.getItem('session'))
-    )),
     getPost: state => {},
     modifyPost: state => {},
     login: (state, action) => {

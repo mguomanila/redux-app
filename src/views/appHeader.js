@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const app = props => {
+export default function(props){
   
   return (
     <header className="app-header">
@@ -15,5 +15,3 @@ const app = props => {
     </header>
   )
 }
-
-export default app
