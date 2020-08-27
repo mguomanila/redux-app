@@ -6,16 +6,15 @@ import BasicInput from 'APPSRC/components/basicInput'
 
 import {
   login as loginReduce,
-  getSessionContext as sessionContextReduce,
-  getInitialState
+  getSessionContext as sessionContextSelect
 } from 'APPSRC/features/session/slice'
 
 const history = createBrowserHistory()
 
 export default function(props){
   const dispatch = useDispatch()
-  const state = useSelector(sessionContextReduce)
-  console.log({state})
+  const state = useSelector(sessionContextSelect)
+  
   const login = e => {
     const detail = {}
     Array
@@ -28,11 +27,13 @@ export default function(props){
       pass: detail.password
     }))
     history.push('/', '')
+    console.log({state})
   }
   
   return (
     <form className="login-form"
       onSubmit={login}>
+      
       <fieldset>
         <legend>Log In</legend>
         <BasicInput name="username" type="text"

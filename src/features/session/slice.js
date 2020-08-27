@@ -17,8 +17,9 @@ export const counterSlice = createSlice({
     getPost: state => {},
     modifyPost: state => {},
     login: (state, action) => {
+      state.context.loggedIn = true
       Request
-      .get(Config.endpoint('/users'))
+      .post(Config.endpoint('/users'))
       .query({
         'username': action.payload.name,
         'password': action.payload.pass
@@ -37,14 +38,19 @@ export const counterSlice = createSlice({
   }
 })
 
-const getResponseResolver = state => {
-  return  (err, res) => {
-    if(res.ok && res.body instanceof Array && res.body.length > 0){
-      Object.assign(state.context, res.body[0])
-      state.context.loggedIn = true
-      state.context.profileImageData = null
-      Cookie.setItem('session', JSON.stringify(state.context))
-    }
+function getResponseResolver(state){
+  return (err, res) => {
+    console.log({res})
+    console.log({state})
+//     if(res.ok){
+//       Object.assign(state.context, res.body)
+//       state.context.loggedIn = true
+//       state.context.profileImageData = null
+//       Cookie.setItem('session', JSON.stringify(state.context))
+      Cookie.setItem('test', 'test')
+//     } else {
+      Cookie.setItem('loggedIn', true)
+//     }
   }
 }
 
