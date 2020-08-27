@@ -20,6 +20,7 @@ export const counterSlice = createSlice({
       state.context.loggedIn = true
       Request
       .post(Config.endpoint('/users'))
+      .set('Accept', 'application/json')
       .query({
         'username': action.payload.name,
         'password': action.payload.pass
@@ -38,19 +39,19 @@ export const counterSlice = createSlice({
   }
 })
 
-function getResponseResolver(state){
+function getResponseResolver(state, action){
   return (err, res) => {
     console.log({res})
-    console.log({state})
-//     if(res.ok){
+    if(!err & res.body){
 //       Object.assign(state.context, res.body)
-//       state.context.loggedIn = true
+      state.context.loggedIn = true
+    console.log({state})
 //       state.context.profileImageData = null
 //       Cookie.setItem('session', JSON.stringify(state.context))
-      Cookie.setItem('test', 'test')
-//     } else {
-      Cookie.setItem('loggedIn', true)
-//     }
+//       Cookie.setItem('test', 'test')
+    } else {
+//       Cookie.setItem('loggedIn', true)
+    }
   }
 }
 
