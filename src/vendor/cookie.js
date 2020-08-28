@@ -30,12 +30,12 @@ export default {
         new RegExp(
           "(?:(?:^|.*;)\\s*" 
           + encodeURIComponent(sKey)
-            .replace(/[\-\.\+\*]/g, "\\$&") 
+            .replace(/[-.+*]/g, "\\$&") 
           + "\\s*\\=\\s*([^;]*).*$)|^.*$"), // end regexp
         "$1")) || null
   },
   setItem: function(sKey, sValue, vEnd, sPath, sDomain, bSecure){
-    if(!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return false }
+    if(!sKey || /^(?:expires|max-age|path|domain|secure)$/i.test(sKey)) { return false }
     let sExpires = ''
     if(vEnd){
       switch(vEnd.constructor){
@@ -47,6 +47,8 @@ export default {
           break
         case Date:
           sExpires = "; expires=" + vEnd.toUTCString()
+          break
+        default:
           break
       }
     }
@@ -71,15 +73,15 @@ export default {
     return (new RegExp(
       "(?:^|;\\s*)" 
       + encodeURIComponent(sKey)
-        .replace(/[\-\.\+\*]/g, "\\$&")
+        .replace(/[-.+*]/g, "\\$&")
       + "\\s*\\="
     )).test(document.cookie)
   },
   keys: function(){
     const aKeys = document.cookie.replace(
-      /((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g,
+      /((?:^|\s*;)[^=]+)(?=;|$)|^\s*|\s*(?:=[^;]*)?(?:\1|$)/g,
       ""
-    ).split(/\s*(?:\=[^;]*)?;\s*/)
+    ).split(/\s*(?:=[^;]*)?;\s*/)
     for(let nIdx = 0; nIdx < aKeys.length; nIdx++){
       aKeys[nIdx] = decodeURIComponent(aKeys[nIdx])
     }

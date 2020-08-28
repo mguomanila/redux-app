@@ -1,6 +1,9 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { createBrowserHistory } from 'history'
+import Request from 'superagent'
+import Config from 'APPSRC/app/appConfig'
+import Cookie from 'APPSRC/vendor/cookie'
 
 import BasicInput from 'APPSRC/components/basicInput'
 
@@ -13,7 +16,7 @@ const history = createBrowserHistory()
 
 export default function(props){
   const dispatch = useDispatch()
-  const state = useSelector(sessionContextSelect)
+  let state = useSelector(sessionContextSelect)
   
   const login = e => {
     const detail = {}
@@ -22,12 +25,32 @@ export default function(props){
     .forEach(el => {
       detail[el.getAttribute('name')] = el.value
     })
-    dispatch(loginReduce({
-      name: detail.username,
-      pass: detail.password
-    }))
+    e.preventDefault()
+    e.stopPropagation()
+    Request
+    .post(Config.endpoint('/users'))
+    .set('Accept', 'application/json')
+    .query({
+      'username': detail.username,
+      'password': detail.password
+    })
+    .end((err, res) => {
+      if(!err && res.body){
+        Cookie.setItem('session', JSON.stringify(res.body))
+        dispatch(loginReduce(Object.assign({
+          loggedIn: true,
+          name: detail.username,
+          pass: detail.password,
+        }, res.body)))
+      } else {
+        Cookie.setItem('session', JSON.stringify({loginError: true}))
+        dispatch(loginReduce({
+          loggedIn: false,
+          loginError: 'Something went wrong!'
+        }))
+      }
+    })
     history.push('/', '')
-    console.log({state})
   }
   
   return (
@@ -41,6 +64,7 @@ export default function(props){
         <BasicInput name="password" type="password"
           placeholder="password" />
           {state.loginError && <aside className="error">{state.loginError}</aside>}
+          {state.name && <aside className="error">hello {state.name} ... Welcome Back</aside>}
         <button type="submit">Log In</button>
       </fieldset>
     </form>
