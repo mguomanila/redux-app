@@ -5,9 +5,7 @@ import Cookie from 'APPSRC/vendor/cookie'
 export const counterSlice = createSlice({
   name: 'session',
   initialState: {
-    context: {
-      loggedIn: false,
-    },
+    context: (() => JSON.parse(Cookie.getItem('session')) || {loggedIn: false})(),
   },
   reducers: {
     getPost: state => {},

@@ -16,17 +16,17 @@ const history = createBrowserHistory()
 
 export default function(props){
   const dispatch = useDispatch()
-  let state = useSelector(sessionContextSelect)
+  const state = useSelector(sessionContextSelect)
   
   const login = e => {
     const detail = {}
+    e.preventDefault()
+    e.stopPropagation()
     Array
     .from(e.target.querySelectorAll('input'))
     .forEach(el => {
       detail[el.getAttribute('name')] = el.value
     })
-    e.preventDefault()
-    e.stopPropagation()
     Request
     .post(Config.endpoint('/users'))
     .set('Accept', 'application/json')
@@ -54,6 +54,8 @@ export default function(props){
   }
   
   return (
+    <>
+    {state.loggedIn && <div className="jumbotron">hello {state.name} ... Welcome Back</div> ||
     <form className="login-form"
       onSubmit={login}>
       
@@ -64,9 +66,9 @@ export default function(props){
         <BasicInput name="password" type="password"
           placeholder="password" />
           {state.loginError && <aside className="error">{state.loginError}</aside>}
-          {state.name && <aside className="error">hello {state.name} ... Welcome Back</aside>}
         <button type="submit">Log In</button>
       </fieldset>
-    </form>
+    </form>}
+    </>
   )
 }

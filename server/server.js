@@ -46,15 +46,14 @@ const server = http.createServer((req, res) => {
       req.on('end', e => {
         let verify = parseReq(data)
         verify = verify ? verify : parseUrl(lookup)
-        console.log(verify)
         if('username' in verify && 'password' in verify){
           if(verify['username'] == username && verify['password'] == password){
             res.writeHead(200, headers['200'])
             res.end(JSON.stringify({
               loggedIn: true,
-              message: 'test'
+              name: username,
+              message: 'successfully logged'
             }))
-            console.log({ok:true})
           } else {
             res.writeHead(201, headers['200'])
             res.end('verify error')
