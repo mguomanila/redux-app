@@ -1,7 +1,8 @@
-import React, { useState } from 'react' 
+import React, { useState, useRef } from 'react' 
 import { createBrowserHistory } from 'history'
 import { useSelector, useDispatch } from 'react-redux'
 import fs from 'fs'
+import ReactDOM from 'react-dom'
 
 import BasicInput from 'APPSRC/components/basicInput'
 import { elemUtil } from 'APPSRC/utility'
@@ -10,7 +11,8 @@ import { elemUtil } from 'APPSRC/utility'
 import {
   createUser as createUserAction,
   editUser as editUserAction,
-  validate as validateAction
+  validate as validateAction,
+  image as imageAction
 } from 'APPSRC/features/users/slice'
 
 const history = createBrowserHistory()
@@ -72,11 +74,28 @@ export default function(props){
     }
   }
   
+  const setPlaceholderImage = e => {
+    const util = elemUtil(e.target)
+    const file = util.getInputElement('profileImage')
+    if(!typeof file.value == 'string' || /^\s*$/.test(file.value)){
+      dispatch(imageAction({
+        profileImageData: fs.readFileSync('./profileImageData.txt', 'utf-8')
+      }))
+    }
+  }
+  
   const imageLoadedHandler = e => {
     const imageSize = atob(decodeURI(e.target.result).replace(/^.*base64,/, '')).length
     dispatch(validateAction({
       sizeExceeded: imageSize > 1024*1000
     }))
+    if(state.sizeExceeded){
+      setPlaceholderImage(e)
+    } else {
+      dispatch(imageAction({
+        profileImageData: e.target.result
+      }))
+    }
   }
   
   const userImageUpload = e => {
@@ -86,20 +105,10 @@ export default function(props){
     reader.readAsDataURL(file)
   }
   
-  const setPlaceholderImage = e => {
-    const util = elemUtil(e.target)
-    const file = util.getInputElement('profileImage')
-    if(!typeof file.value == 'string' || /^\s*$/.test(file.value)){
-      dispatch(validateAction({
-        profileImageData: fs.readFileSync('./profileImageData.txt', 'utf-8')
-      }))
-    }
-  }
-  
   // noValidate disables native validation
   // to avoid react collisions with native state
   return (
-    <form ref="form"
+    <form ref={useRef(null)}
       className="user-edit"
       name="useredit"
       onSubmit={e => e.preventDefault()}
@@ -110,7 +119,7 @@ export default function(props){
           name="blogName"
           placeholder="blog name"
           error={state.validity.blogName}
-          autofocus /><hr />
+          autoFocus /><hr />
         <BasicInput type="text"
           name="username"
           placeholder="user name"
@@ -126,10 +135,10 @@ export default function(props){
             src={state.profileImageData} />
           <BasicInput type="file"
             name="profileImage"
-            ref="profileImage"
             onChange={userImageUpload}
             helptext={state.sizeExceed ? 'less than 1MB' : ''}>
-            <button onClick={chooseFile}>
+            <button style={{width: 130, top: -10, left: -33}}
+              onClick={chooseFile}>
               choose file
             </button>
           </BasicInput>

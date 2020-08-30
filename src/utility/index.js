@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom'
 
 const validators = {
   minLength: {
@@ -53,9 +52,8 @@ const validate = (fieldVal, constraints=null) => {
 // a validateField utility
 const elemUtil = (node, constraints=null) => {
   const getInputElement = ref => (node[ref]
-    ? ReactDOM.findDOMNode(node[ref])
-      .querySelector('input')
-    : ReactDOM.findDOMNode(node)
+    ? node[ref].querySelector('input')
+    : node.parentNode
       .querySelector('[name='+ref+'] input')
   )
   

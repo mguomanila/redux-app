@@ -13,7 +13,10 @@ export const usersSlice = createSlice({
     editUser: (state, action) => {
     },
     validate: (state, {payload}) => {
-      state.users = payload
+      Object.assign(state.validity, payload)
+    },
+    image: (state, {payload}) => {
+      Object.assign(state, payload)
     }
   }
 })
@@ -21,7 +24,8 @@ export const usersSlice = createSlice({
 export const {
   createUser,
   editUser,
-  validate
+  validate,
+  image
 } = usersSlice.actions
 
 export default usersSlice.reducer
