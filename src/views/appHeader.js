@@ -2,12 +2,9 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import {
-  getSessionContext as sessionContextSelect
-} from 'APPSRC/features/session/slice'
 
 export default function(props){
-  const state = useSelector(sessionContextSelect)
+  const state = useSelector(state => state.session)
   
   return (
     <header className="app-header">

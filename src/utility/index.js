@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom'
 
 const validators = {
@@ -22,12 +21,6 @@ const validators = {
   }
 }
 
-const assert_constraints = constraints => {
-  if(!constraints || typeof constraints !== 'object') 
-    return false
-  else return true
-}
-
 /**
  * returns the failed constraints { errors: [] } 
  * or true if valid.
@@ -36,53 +29,53 @@ const assert_constraints = constraints => {
  * validators return true if valid,
  * false otherwise.
  */
-const validate = (val, constraints=null) => {
+const validate = (fieldVal, constraints=null) => {
   const errors = []
-  if(!assert_constraints(constraints))
-    return true
   // test each constraint
   for(const prop in constraints){
     if(validators.hasOwnProperty(prop)){
       const validator = validators[prop]
       const constraint = constraints[prop]
-      if(!validator.assert(val, constraint)){
+      if(!validator.assert(fieldVal, constraint)){
         errors.push({
-          msg: validator.msg(val, constraint),
+          msg: validator.msg(fieldVal, constraint),
           constraint
         })
       }
     }
   }
   
-  return errors.length ? {errors} : true
+  return errors
 }
 
 // formUtil is function utility that you
 // pass node and constraints and returns
 // a validateField utility
-const formUtil = (node, constraints) => {
-  const getInpuElement = ref => (node[ref]
+const elemUtil = (node, constraints=null) => {
+  const getInputElement = ref => (node[ref]
     ? ReactDOM.findDOMNode(node[ref])
       .querySelector('input')
     : ReactDOM.findDOMNode(node)
       .querySelector('[name='+ref+'] input')
   )
   
-  return {
-    // typeof name == 'string'
-    // typeof override == 'object'
-    validateField(name, override=null){
-      const fieldVal = getInpuElement(name).value
-      if(name in constraints){
-        const constraint = override || constraints[name]
-        const errors = validate(fieldVal, constraint)
-        
-        return !!errors.error ? errors.error : false
-      } else {
-        return true
-      }
+  // typeof name == 'string'
+  // typeof override == 'object'
+  const validateField = (name, value, override=null) => {
+    let errors = []
+    if(name in constraints){
+      const constraint = override || constraints[name]
+      errors = validate(value, constraint)
     }
+    return errors.length
+      ? errors
+      : null
+  }
+  
+  return {
+    getInputElement,
+    validateField
   }
 }
 
-export validate, formUtil
+export { validate, elemUtil }

@@ -8,15 +8,18 @@ import Cookie from 'APPSRC/vendor/cookie'
 import BasicInput from 'APPSRC/components/basicInput'
 
 import {
-  login as loginReduce,
-  getSessionContext as sessionContextSelect
+  login as loginAction
 } from 'APPSRC/features/session/slice'
+
+import {
+  validate as usersAction
+} from 'APPSRC/features/users/slice'
 
 const history = createBrowserHistory()
 
 export default function(props){
   const dispatch = useDispatch()
-  const state = useSelector(sessionContextSelect)
+  const state = useSelector(state => state.session)
   
   const login = e => {
     const detail = {}
@@ -36,15 +39,12 @@ export default function(props){
     })
     .end((err, res) => {
       if(!err && res.body){
-        Cookie.setItem('session', JSON.stringify(res.body))
-        dispatch(loginReduce(Object.assign({
-          loggedIn: true,
-          name: detail.username,
-          pass: detail.password,
-        }, res.body)))
+        Cookie.setItem('session', JSON.stringify(res.body.session))
+        dispatch(loginAction(res.body.session))
+        dispatch(usersAction(res.body.users))
       } else {
-        Cookie.setItem('session', JSON.stringify({loginError: true}))
-        dispatch(loginReduce({
+        Cookie.removeItem('session')
+        dispatch(loginAction({
           loggedIn: false,
           loginError: 'Something went wrong!'
         }))
@@ -55,7 +55,7 @@ export default function(props){
   
   return (
     <>
-    {state.loggedIn && <div className="jumbotron">hello {state.name} ... Welcome Back</div> ||
+    {(state.loggedIn && <div className="jumbotron">hello {state.name} ... Welcome Back</div>) ||
     <form className="login-form"
       onSubmit={login}>
       

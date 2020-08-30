@@ -50,19 +50,24 @@ const server = http.createServer((req, res) => {
           if(verify['username'] == username && verify['password'] == password){
             res.writeHead(200, headers['200'])
             res.end(JSON.stringify({
-              loggedIn: true,
-              name: username,
-              message: 'successfully logged'
+              session: {
+                loggedIn: true,
+                name: username,
+              },
+              users: ['marlon', 'admin']
             }))
           } else {
-            res.writeHead(201, headers['200'])
-            res.end('verify error')
+            res.writeHead(201, headers['201'])
+            res.end('error')
           }
         } else {
-          res.writeHead(201, headers['100'])
-          res.end('wrong query')
+          res.writeHead(201, headers['201'])
+          res.end('error')
         }
       })
+    } else {
+      res.writeHead(201, headers['201'])
+      res.end('error')
     }
   })
 })

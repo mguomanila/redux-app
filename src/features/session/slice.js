@@ -1,31 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit'
-import Cookie from 'APPSRC/vendor/cookie'
 
 
 export const counterSlice = createSlice({
   name: 'session',
   initialState: {
-    context: (() => JSON.parse(Cookie.getItem('session')) || {loggedIn: false})(),
+    loggedIn: false
   },
   reducers: {
     getPost: state => {},
     modifyPost: state => {},
-    login: (state, action) => {
-      state.context = Object.assign({}, action.payload)
+    login: (state, {payload}) => {
+      Object.assign(state, payload)
     },
     logout: state => {
-      Cookie.removeItem('session')
-      state.context = Object.assign({}, {
-        loggedIn: false
-      })
+      state.context = { loggedIn: false }
     },
     editUser: state => {},
     createUser: state => {},
     search: state => {},
   }
 })
-
-export const getSessionContext =  state => state.session.context
 
 export const {
   getPost, modifyPost,
