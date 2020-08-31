@@ -12,7 +12,7 @@ import {
 } from 'APPSRC/features/session/slice'
 
 import {
-  validate as usersAction
+  image as usersAction
 } from 'APPSRC/features/users/slice'
 
 const history = createBrowserHistory()
@@ -40,8 +40,9 @@ export default function(props){
     .end((err, res) => {
       if(!err && res.body){
         Cookie.setItem('session', JSON.stringify(res.body.session))
+        Cookie.setItem('users', JSON.stringify( res.body.users))
         dispatch(loginAction(res.body.session))
-        dispatch(usersAction(res.body.users))
+        dispatch(usersAction(res.body))
       } else {
         Cookie.removeItem('session')
         dispatch(loginAction({

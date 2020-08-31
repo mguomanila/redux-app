@@ -1,31 +1,22 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import update from 'react-addons-update'
-import ClassNames from 'classnames'
+import classnames from 'classnames'
+import update from 'immutability-helper'
 
 
-function app(props) {
+export default function(props) {
   const { helpText, error } = props
+  const isError = error && error.msg
   
   return (
-    <div className={ClassNames({
+    <div className={classnames({
       'basic-input': true,
-      'error': error
+      'error': isError
     })} {...props}>
-      <input className={error ? 'error' : ''}
+      <input className={isError ? 'error' : ''} 
       {...update(props, {
         children: {$set: null}
-      })}/> 
-      {props.children}
-      <aside>{helpText || error}</aside>
+      })}/>
+      <aside>{helpText || isError ? error.msg : ''}</aside>
     </div>
   )
 }
-
-// enforce props types
-app.propTypes = {
-  helpText: PropTypes.string,
-  error: PropTypes.bool
-}
-
-export default app

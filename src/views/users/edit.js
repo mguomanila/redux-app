@@ -1,8 +1,6 @@
-import React, { useState, useRef } from 'react' 
+import React, { useState } from 'react' 
 import { createBrowserHistory } from 'history'
 import { useSelector, useDispatch } from 'react-redux'
-import fs from 'fs'
-import ReactDOM from 'react-dom'
 
 import BasicInput from 'APPSRC/components/basicInput'
 import { elemUtil } from 'APPSRC/utility'
@@ -36,22 +34,15 @@ export default function(props){
   const dispatch = useDispatch()
   const state = useSelector(state => state.user)
   
-  const chooseFile = e => {
-    const util = elemUtil(e.target)
-    return util
-      .getInputElement('profileImage')
-      .click()
-  }
-  
   const createUser = e => {
     e.preventDefault()
-    const util = elemUtil(e.target, constraints)
     const detail = {}
     const validationState = {}
     const error = false
+    const util = elemUtil(e.target, constraints)
     
     Array
-    .from(e.target.querySelectorAll('input'))
+    .from(e.target.parentNode.querySelectorAll('input'))
     .forEach(v => {
       const fieldname = v.getAttribute('name')
       detail[fieldname] = v.value
@@ -63,6 +54,7 @@ export default function(props){
         validationState[fieldname] =  util.validateField(fieldname, detail[fieldname]) 
       }
     })
+    
     if(state.profileImageData){
       detail['profileImageData'] = state.profileImageData
     }
@@ -70,18 +62,16 @@ export default function(props){
       validity: validationState
     }))
     if(!error){
-      dispatch(createUserAction(detail))
+//       dispatch(createUserAction(detail))
+      history.push('', `/users/${state.users[0].id}`)
     }
   }
   
-  const setPlaceholderImage = e => {
+  const chooseFile = e => {
     const util = elemUtil(e.target)
-    const file = util.getInputElement('profileImage')
-    if(!typeof file.value == 'string' || /^\s*$/.test(file.value)){
-      dispatch(imageAction({
-        profileImageData: fs.readFileSync('./profileImageData.txt', 'utf-8')
-      }))
-    }
+    return util
+      .getInputElement('profileImage')
+      .click()
   }
   
   const imageLoadedHandler = e => {
@@ -89,9 +79,7 @@ export default function(props){
     dispatch(validateAction({
       sizeExceeded: imageSize > 1024*1000
     }))
-    if(state.sizeExceeded){
-      setPlaceholderImage(e)
-    } else {
+    if(!state.sizeExceeded){
       dispatch(imageAction({
         profileImageData: e.target.result
       }))
@@ -108,8 +96,7 @@ export default function(props){
   // noValidate disables native validation
   // to avoid react collisions with native state
   return (
-    <form ref={useRef(null)}
-      className="user-edit"
+    <form className="user-edit"
       name="useredit"
       onSubmit={e => e.preventDefault()}
       noValidate>
@@ -154,7 +141,7 @@ export default function(props){
           placeholder="email" />
         <button type="submit"
           onClick={createUser}>
-          I'm ready to write</button>
+          I&#39;m ready to write</button>
       </fieldset>
     </form>
   )
