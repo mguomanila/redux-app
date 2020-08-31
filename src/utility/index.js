@@ -29,20 +29,21 @@ const validators = {
  * false otherwise.
  */
 const validate = (fieldVal, constraints=null) => {
+  const error = []
   // test each constraint
   for(const prop in constraints){
     if(validators.hasOwnProperty(prop)){
       const validator = validators[prop]
       const constraint = constraints[prop]
       if(!validator.assert(fieldVal, constraint)){
-        return {
+        error.push({
+          name: prop,
           msg: validator.msg(fieldVal, constraint)
-        }
+        })
       }
     }
   }
-  // no error
-  return {}
+  return error
 }
 
 // formUtil is function utility that you
@@ -58,10 +59,11 @@ const elemUtil = (node, constraints=null) => {
   // typeof name == 'string'
   // typeof override == 'object'
   const validateField = (name, value, override=null) => {
-    const error = {}
+    let error = []
+    name = name.toLowerCase()
     if(name in constraints){
       const constraint = override || constraints[name]
-      Object.assign(error, validate(value, constraint))
+      error = validate(value, constraint)
     }
     return error
   }

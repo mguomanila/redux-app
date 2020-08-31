@@ -9,6 +9,8 @@ import {
 } from './counterSlice';
 import styles from './Counter.module.css';
 
+import BasicInput from 'APPSRC/components/basicInput'
+
 export function Counter() {
   const count = useSelector(selectCount);
   const dispatch = useDispatch();
@@ -23,6 +25,11 @@ export function Counter() {
           onClick={() => dispatch(increment())} >
           +
         </button>
+        <BasicInput type="text"
+          name="blogName"
+          placeholder="blog name"
+          error={[{msg: incrementAmount}]}
+          autoFocus />
         <span className={styles.value}>{count}</span>
         <button
           className={styles.button}

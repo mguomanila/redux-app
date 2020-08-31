@@ -1,19 +1,14 @@
-import React, { useState } from 'react' 
-import { createBrowserHistory } from 'history'
+import React, { useState, useEffect } from 'react' 
 import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import BasicInput from 'APPSRC/components/basicInput'
 import { elemUtil } from 'APPSRC/utility'
 
 // actions
 import {
-  createUser as createUserAction,
-  editUser as editUserAction,
   validate as validateAction,
-  image as imageAction
 } from 'APPSRC/features/users/slice'
-
-const history = createBrowserHistory()
 
 const constraints = {
   username: {
@@ -31,38 +26,34 @@ const constraints = {
 }
 
 export default function(props){
+  const history = useHistory()
   const dispatch = useDispatch()
   const state = useSelector(state => state.user)
+  const [validity, setValidity] = useState({})
   
-  const createUser = e => {
-    e.preventDefault()
+  const valueChanged = e => {
     const detail = {}
-    const validationState = {}
-    const error = false
     const util = elemUtil(e.target, constraints)
-    
     Array
     .from(e.target.parentNode.querySelectorAll('input'))
     .forEach(v => {
       const fieldname = v.getAttribute('name')
       detail[fieldname] = v.value
       if(fieldname === 'username'){
-        validationState[fieldname] =  util.validateField(fieldname, detail[fieldname], {
+        setValidity(Object.assign(validity, validity[fieldname] = util.validateField(fieldname, detail[fieldname], {
           exclusive: state.users.map(v => v.username)
-        })
+        })))
       } else {
-        validationState[fieldname] =  util.validateField(fieldname, detail[fieldname]) 
+        setValidity(Object.assign(validity, validity[fieldname] = util.validateField(fieldname, detail[fieldname]))) 
       }
     })
+  }
+  
+  const createUser = e => {
+    e.preventDefault()
     
-    if(state.profileImageData){
-      detail['profileImageData'] = state.profileImageData
-    }
-    dispatch(validateAction({
-      validity: validationState
-    }))
-    if(!error){
-//       dispatch(createUserAction(detail))
+    valueChanged(e)
+    if(!validity.blogName.length && !validity.username.length && !validity.password.length){
       history.push('', `/users/${state.users[0].id}`)
     }
   }
@@ -80,7 +71,7 @@ export default function(props){
       sizeExceeded: imageSize > 1024*1000
     }))
     if(!state.sizeExceeded){
-      dispatch(imageAction({
+      dispatch(validateAction({
         profileImageData: e.target.result
       }))
     }
@@ -105,16 +96,17 @@ export default function(props){
         <BasicInput type="text"
           name="blogName"
           placeholder="blog name"
-          error={state.validity.blogName}
+          error={validity.blogName}
+          onChange={valueChanged}
           autoFocus /><hr />
         <BasicInput type="text"
           name="username"
-          placeholder="user name"
-          error={state.validity.username} />
+          placeholder="user name" />
         <BasicInput type="text"
           name="password"
+          onChange={valueChanged}
           placeholder="password"
-          error={state.validity.password}
+          error={validity.password}
           required /> <br />
         <div className="profile-image-container">
           <label>profile image</label>

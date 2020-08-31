@@ -12,7 +12,7 @@ import {
 } from 'APPSRC/features/session/slice'
 
 import {
-  image as usersAction
+  validate as usersAction
 } from 'APPSRC/features/users/slice'
 
 const history = createBrowserHistory()

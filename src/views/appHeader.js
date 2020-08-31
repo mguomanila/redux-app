@@ -12,6 +12,7 @@ export default function(props){
         <h1>ph&#923;edrus</h1>
       </Link>
       <section className="account-ctrl">
+        <Link to="/counter">Counter</Link>
         <Link to="/users/create">Join</Link>
         <Link to="/login">{state.loggedIn ? "Loggedin" : 'LogIn'}</Link>
       </section>
