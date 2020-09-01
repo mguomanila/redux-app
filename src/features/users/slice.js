@@ -17,7 +17,9 @@ export const usersSlice = createSlice({
     },
     validate: (state, {payload}) => {
       Object.assign(state.validity, payload)
-//       debugger
+    },
+    imageUpload: (state, {payload}) => {
+      Object.assign(state, payload)
     }
   }
 })
@@ -26,6 +28,7 @@ export const {
   createUser,
   editUser,
   validate,
+  imageUpload,
 } = usersSlice.actions
 
 export default usersSlice.reducer

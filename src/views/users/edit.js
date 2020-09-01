@@ -8,6 +8,7 @@ import { elemUtil } from 'APPSRC/utility'
 // actions
 import {
   validate as validateAction,
+  imageUpload as uploadAction
 } from 'APPSRC/features/users/slice'
 
 const constraints = {
@@ -32,6 +33,7 @@ export default function(props){
   
   const valueChanged = e => {
     const util = elemUtil(e.target, constraints)
+    let error
     Array
     .from(e.target.parentNode.querySelectorAll('input'))
     .forEach(v => {
@@ -41,22 +43,20 @@ export default function(props){
         validity[fieldname] = util.validateField(fieldname, v.value, {
           exclusive: state.users.map(v => v.username)
         }) 
-        dispatch(validateAction(validity))
       } else {
         validity[fieldname] = util.validateField(fieldname, v.value)
-        dispatch(validateAction(validity))
       }
+      error = validity[fieldname].length || error
+      dispatch(validateAction(validity))
     })
+    return error
   }
   
   const createUser = e => {
     e.preventDefault()
-    
-    valueChanged(e)
-    const error = (state.validity.blogName && state.validity.blogName.length) || (state.validity.username && state.validity.username.length) || (state.validity.password && state.validity.password.length)
+    let error = valueChanged(e)
     if(!error){
       history.push('', `/users/${state.users[0].id}`)
-//       dispatch(validateAction({validity}))
     }
   }
   
@@ -69,11 +69,11 @@ export default function(props){
   
   const imageLoadedHandler = e => {
     const imageSize = atob(decodeURI(e.target.result).replace(/^.*base64,/, '')).length
-    dispatch(validateAction({
+    dispatch(uploadAction({
       sizeExceeded: imageSize > 1024*1000
     }))
     if(!state.sizeExceeded){
-      dispatch(validateAction({
+      dispatch(uploadAction({
         profileImageData: e.target.result
       }))
     }

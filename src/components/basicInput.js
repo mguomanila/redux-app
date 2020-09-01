@@ -15,7 +15,7 @@ export default function(props) {
       {...update(props, {
         children: {$set: null}
       })}/>
-      {error ? error.map((err, i) => (<aside key={i}>{helptext || err.msg}</aside>)) : ""}
+      {error ? error.map((err, i) => (<aside key={i}style={{position: 'static'}}>{helptext || err.msg}</aside>)) : ""}
     </div>
   )
 }
