@@ -8,7 +8,8 @@ import { elemUtil } from 'APPSRC/utility'
 // actions
 import {
   validate as validateAction,
-  imageUpload as uploadAction
+  imageUpload as uploadAction,
+  createUser as userAction
 } from 'APPSRC/features/users/slice'
 
 const constraints = {
@@ -29,7 +30,8 @@ const constraints = {
 export default function(props){
   const history = useHistory()
   const dispatch = useDispatch()
-  const state = useSelector(state => state.user)
+  const user = useSelector(state => state.user)
+  const userId = useSelector(state => state.session.userId)
   
   const validateUser = e => {
     const util = elemUtil(e.target, constraints)
@@ -41,7 +43,7 @@ export default function(props){
       const validity = {}
       if(fieldname === 'username'){
         validity[fieldname] = util.validateField(fieldname, v.value, {
-          exclusive: state.users.map(v => v.username)
+          exclusive: user.users.map(v => v.username)
         }) 
       } else {
         validity[fieldname] = util.validateField(fieldname, v.value)
@@ -54,9 +56,19 @@ export default function(props){
   
   const createUser = e => {
     e.preventDefault()
+    const util = elemUtil(e.target)
     const error = validateUser(e)
+    debugger
     if(!error){
-      history.push(`/users/${state.users[0].id}`)
+      dispatch(userAction({
+        blogName: util.getInputElement('blogName').value,
+        userName: util.getInputElement('blogName').value,
+        password: util.getInputElement('password').value,
+        firstname: util.getInputElement('firstName').value,
+        lastname: util.getInputElement('lastName').value,
+        email: util.getInputElement('email').value,
+      }))
+      history.push(`/user/${userId}`)
     }
   }
   
@@ -69,10 +81,9 @@ export default function(props){
   
   const imageLoadedHandler = e => {
     const imageSize = atob(decodeURI(e.target.result).replace(/^.*base64,/, '')).length
-    dispatch(uploadAction({
-      sizeExceeded: imageSize > 1024*1000
-    }))
-    if(!state.sizeExceeded){
+    const sizeExceeded = imageSize > 1024*1000
+    dispatch(uploadAction({ sizeExceeded }))
+    if(!sizeExceeded){
       dispatch(uploadAction({
         profileImageData: e.target.result
       }))
@@ -98,24 +109,25 @@ export default function(props){
         <BasicInput type="text"
           name="blogName"
           placeholder="blog name"
-          error={state.validity.blogName}
+          error={user.validity.blogName}
           autoFocus /><hr />
         <BasicInput type="text"
           name="username"
+          error={user.validity.username}
           placeholder="user name" />
         <BasicInput type="password"
           name="password"
           placeholder="password"
-          error={state.validity.password}
+          error={user.validity.password}
           required /> <br />
         <div className="profile-image-container">
           <label>profile image</label>
           <img className="profile-img"
-            src={state.profileImageData} />
+            src={user.image.profileImageData} />
           <BasicInput type="file"
             name="profileImage"
             onChange={userImageUpload}
-            helptext={state.sizeExceed ? 'less than 1MB' : ''}>
+            helptext={user.image.sizeExceeded ? 'less than 1MB' : ''}>
             <button style={{width: 210, top: -10, left: -10}}
               onClick={chooseFile}>
               choose an image

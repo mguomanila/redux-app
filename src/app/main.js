@@ -35,16 +35,16 @@ const routes = props => {
             <Route exact path="/posts/:postId">
               <PostView />
             </Route>
-            <Route exact path="/users">
+            <Route exact path="/user">
               <UserList />
             </Route>
-            <Route exact path="/users/create">
+            <Route exact path="/user/create">
               <UserEdit />
             </Route>
-            <Route exact path="/users/:userId">
+            <Route exact path="/user/:userId">
               <UserView />
             </Route>
-            <Route exact path="/users/:userId/edit">
+            <Route exact path="/user/:userId/edit">
               <UserEdit />
             </Route>
             <Route exact path="/login">

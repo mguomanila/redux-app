@@ -13,7 +13,7 @@ export default function(props){
       </Link>
       <section className="account-ctrl">
         <Link to="/counter">Counter</Link>
-        <Link to="/users/create">Join</Link>
+        <Link to="/user/create">Join</Link>
         <Link to="/login">{loggedIn ? "Loggedin" : 'LogIn'}</Link>
       </section>
     </header>

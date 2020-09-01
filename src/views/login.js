@@ -42,7 +42,7 @@ export default function(props){
         Cookie.setItem('session', JSON.stringify(res.body.session))
         Cookie.setItem('users', JSON.stringify( res.body.users))
         dispatch(loginAction(res.body.session))
-        dispatch(usersAction(res.body))
+        dispatch(usersAction({users: res.body.users}))
       } else {
         Cookie.removeItem('session')
         dispatch(loginAction({

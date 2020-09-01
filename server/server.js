@@ -4,7 +4,8 @@ const path = require('path')
 // confidential
 const credential = {
  username : 'admin',
- password : '123'
+ password : '123',
+ userId: 2
 }
 
 // routers
@@ -55,6 +56,7 @@ const server = http.createServer((req, res) => {
               session: {
                 loggedIn: true,
                 name: credential.username,
+                userId: credential.userId,
               },
               users: [{
                 username: 'marlon',
