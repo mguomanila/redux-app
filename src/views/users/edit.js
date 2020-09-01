@@ -31,7 +31,7 @@ export default function(props){
   const dispatch = useDispatch()
   const state = useSelector(state => state.user)
   
-  const valueChanged = e => {
+  const validateUser = e => {
     const util = elemUtil(e.target, constraints)
     let error
     Array
@@ -54,9 +54,9 @@ export default function(props){
   
   const createUser = e => {
     e.preventDefault()
-    let error = valueChanged(e)
+    const error = validateUser(e)
     if(!error){
-      history.push('', `/users/${state.users[0].id}`)
+      history.push(`/users/${state.users[0].id}`)
     }
   }
   
@@ -116,9 +116,9 @@ export default function(props){
             name="profileImage"
             onChange={userImageUpload}
             helptext={state.sizeExceed ? 'less than 1MB' : ''}>
-            <button style={{width: 130, top: -10, left: -33}}
+            <button style={{width: 210, top: -10, left: -10}}
               onClick={chooseFile}>
-              choose file
+              choose an image
             </button>
           </BasicInput>
         </div>

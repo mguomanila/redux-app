@@ -58,6 +58,7 @@ const elemUtil = (node, constraints=null) => {
   
   // typeof name == 'string'
   // typeof override == 'object'
+  // returns array of msg objects
   const validateField = (name, value, override=null) => {
     let error = []
     name = name.toLowerCase()

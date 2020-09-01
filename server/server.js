@@ -2,8 +2,10 @@ const http = require('http')
 const path = require('path')
   
 // confidential
-const username = 'admin'
-const password = '123'
+const credential = {
+ username : 'admin',
+ password : '123'
+}
 
 // routers
 const pages = [
@@ -47,12 +49,12 @@ const server = http.createServer((req, res) => {
         let verify = parseReq(data)
         verify = verify ? verify : parseUrl(lookup)
         if('username' in verify && 'password' in verify){
-          if(verify['username'] == username && verify['password'] == password){
+          if(verify['username'] == credential.username && verify['password'] == credential.password){
             res.writeHead(200, headers['200'])
             res.end(JSON.stringify({
               session: {
                 loggedIn: true,
-                name: username,
+                name: credential.username,
               },
               users: [{
                 username: 'marlon',

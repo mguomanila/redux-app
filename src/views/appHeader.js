@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 
 export default function(props){
-  const state = useSelector(state => state.session)
+  const { loggedIn } = useSelector(state => state.session)
   
   return (
     <header className="app-header">
@@ -14,7 +14,7 @@ export default function(props){
       <section className="account-ctrl">
         <Link to="/counter">Counter</Link>
         <Link to="/users/create">Join</Link>
-        <Link to="/login">{state.loggedIn ? "Loggedin" : 'LogIn'}</Link>
+        <Link to="/login">{loggedIn ? "Loggedin" : 'LogIn'}</Link>
       </section>
     </header>
   )
