@@ -29,22 +29,22 @@ export default function(props){
   const history = useHistory()
   const dispatch = useDispatch()
   const state = useSelector(state => state.user)
-  const [validity, setValidity] = useState({})
   
   const valueChanged = e => {
-    const detail = {}
     const util = elemUtil(e.target, constraints)
     Array
     .from(e.target.parentNode.querySelectorAll('input'))
     .forEach(v => {
       const fieldname = v.getAttribute('name')
-      detail[fieldname] = v.value
+      const validity = {}
       if(fieldname === 'username'){
-        setValidity(Object.assign(validity, validity[fieldname] = util.validateField(fieldname, detail[fieldname], {
+        validity[fieldname] = util.validateField(fieldname, v.value, {
           exclusive: state.users.map(v => v.username)
-        })))
+        }) 
+        dispatch(validateAction(validity))
       } else {
-        setValidity(Object.assign(validity, validity[fieldname] = util.validateField(fieldname, detail[fieldname]))) 
+        validity[fieldname] = util.validateField(fieldname, v.value)
+        dispatch(validateAction(validity))
       }
     })
   }
@@ -53,8 +53,10 @@ export default function(props){
     e.preventDefault()
     
     valueChanged(e)
-    if(!validity.blogName.length && !validity.username.length && !validity.password.length){
+    const error = (state.validity.blogName && state.validity.blogName.length) || (state.validity.username && state.validity.username.length) || (state.validity.password && state.validity.password.length)
+    if(!error){
       history.push('', `/users/${state.users[0].id}`)
+//       dispatch(validateAction({validity}))
     }
   }
   
@@ -96,17 +98,15 @@ export default function(props){
         <BasicInput type="text"
           name="blogName"
           placeholder="blog name"
-          error={validity.blogName}
-          onChange={valueChanged}
+          error={state.validity.blogName}
           autoFocus /><hr />
         <BasicInput type="text"
           name="username"
           placeholder="user name" />
-        <BasicInput type="text"
+        <BasicInput type="password"
           name="password"
-          onChange={valueChanged}
           placeholder="password"
-          error={validity.password}
+          error={state.validity.password}
           required /> <br />
         <div className="profile-image-container">
           <label>profile image</label>

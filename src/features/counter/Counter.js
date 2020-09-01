@@ -18,18 +18,13 @@ export function Counter() {
 
   return (
     <>
-      <div className={styles.row}>
+      <div className={styles.row} style={{height:'50%'}}>
         <button
           className={styles.button}
           aria-label="Increment value"
           onClick={() => dispatch(increment())} >
           +
         </button>
-        <BasicInput type="text"
-          name="blogName"
-          placeholder="blog name"
-          error={[{msg: incrementAmount}]}
-          autoFocus />
         <span className={styles.value}>{count}</span>
         <button
           className={styles.button}
@@ -38,7 +33,7 @@ export function Counter() {
           -
         </button>
       </div>
-      <div className={styles.row}>
+      <div className={styles.row} style={{height:'50%'}}>
         <input
           className={styles.textbox}
           aria-label="Set increment amount"

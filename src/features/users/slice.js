@@ -11,11 +11,13 @@ export const usersSlice = createSlice({
   },
   reducers: {
     createUser: (state, action) => {
+      Object.assign(state, action.payload)
     },
     editUser: (state, action) => {
     },
     validate: (state, {payload}) => {
-      Object.assign(state, payload)
+      Object.assign(state.validity, payload)
+//       debugger
     }
   }
 })
