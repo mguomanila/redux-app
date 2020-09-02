@@ -10,7 +10,6 @@ import { elemUtil } from 'APPSRC/utility'
 import {
   validate as validateAction,
   imageUpload as uploadAction,
-  createUser as userAction
 } from 'APPSRC/features/users/slice'
 
 const constraints = {
@@ -31,9 +30,10 @@ const constraints = {
 export default function(props){
   const history = useHistory()
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
-  const userId = useSelector(state => state.session.userId)
-  const [userStorage, setUserStorage] = useLocalStorage('user', {})
+  const state = useSelector(state => state.user)
+  const session = JSON.parse(useLocalStorage('session')[0])
+  const [, setUser] = useLocalStorage('user')
+  debugger
   
   const validateUser = e => {
     const util = elemUtil(e.target, constraints)
@@ -45,7 +45,7 @@ export default function(props){
       const validity = {}
       if(fieldname === 'username'){
         validity[fieldname] = util.validateField(fieldname, v.value, {
-          exclusive: user.users.map(v => v.username)
+          exclusive: state.users.map(v => v.username)
         }) 
       } else {
         validity[fieldname] = util.validateField(fieldname, v.value)
@@ -64,15 +64,15 @@ export default function(props){
     if(!error){
       // save in localstorage to save state 
       // between browser calls
-      setUserStorage(JSON.stringify(Object.assign({
+      setUser(JSON.stringify(Object.assign({
         blogName: util.getInputElement('blogName').value,
         userName: util.getInputElement('blogName').value,
         password: util.getInputElement('password').value,
         firstname: util.getInputElement('firstName').value,
         lastname: util.getInputElement('lastName').value,
         email: util.getInputElement('email').value,
-      }, user.image)))
-      history.push(`/users/${userId}`)
+      }, state.user.profileImageData)))
+      history.push(`/users/${session.userId}`)
     }
   }
   
@@ -113,25 +113,25 @@ export default function(props){
         <BasicInput type="text"
           name="blogName"
           placeholder="blog name"
-          error={user.validity.blogName}
+          error={state.validity.blogName}
           autoFocus /><hr />
         <BasicInput type="text"
           name="username"
-          error={user.validity.username}
+          error={state.validity.username}
           placeholder="user name" />
         <BasicInput type="password"
           name="password"
           placeholder="password"
-          error={user.validity.password}
+          error={state.validity.password}
           required /> <br />
         <div className="profile-image-container">
           <label>profile image</label>
           <img className="profile-img"
-            src={user.image.profileImageData} />
+            src={state.user.profileImageData} />
           <BasicInput type="file"
             name="profileImage"
             onChange={userImageUpload}
-            helptext={user.image.sizeExceeded ? 'less than 1MB' : ''}>
+            helptext={state.user.sizeExceeded ? 'less than 1MB' : ''}>
             <button style={{width: 210, top: -10, left: -10}}
               onClick={chooseFile}>
               choose an image

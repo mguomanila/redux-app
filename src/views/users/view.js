@@ -1,15 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import classnames from 'classnames'
-import useLocalStorage from 'react-use-localstorage'
+import { reactLocalStorage } from 'reactjs-localstorage'
 
 
 export default function(props){
   const state = useSelector(state => state.user)
   const userId = useSelector(state => state.session.userId)
-  const [user, setUser] = useLocalStorage('user', '{}')
-  const userObj = JSON.parse(user)
-  debugger
+  const user = reactLocalStorage.getObject('user', '{}')
   
   return userId ? (
     <div className={classnames({
@@ -19,9 +17,9 @@ export default function(props){
       <img className={classnames({
         'profile-img': true,
         'small': props.small
-      })} src={userObj.profileImageData} />
+      })} src={user.profileImageData} />
       <div className="user-meta">
-        <strong>{userObj.blogName}</strong>
+        <strong>{user.blogName}</strong>
       </div>
     </div>
   ) : ''
