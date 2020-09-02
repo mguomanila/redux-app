@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
-import Cookie from 'APPSRC/vendor/cookie'
+import { reactLocalStorage } from 'reactjs-localstorage'
 
 
 export const counterSlice = createSlice({
   name: 'session',
-  initialState: (() => JSON.parse(Cookie.getItem('session')) || {loggedIn: false})(),
+  initialState: reactLocalStorage.getObject('session', {loggedIn: false}),
   reducers: {
     getPost: state => {},
     modifyPost: state => {},

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { createBrowserHistory } from 'history'
-import { Cookies } from 'react-cookie'
+import { useHistory } from 'react-router-dom'
+import useLocalStorage from 'react-use-localstorage'
 import Request from 'superagent'
 
 import Config from 'APPSRC/app/appConfig'
@@ -11,17 +11,13 @@ import {
   login as loginAction
 } from 'APPSRC/features/session/slice'
 
-import {
-  createUser as usersAction
-} from 'APPSRC/features/users/slice'
-
-const history = createBrowserHistory()
-
 
 export default function(props){
   const dispatch = useDispatch()
   const state = useSelector(state => state.session)
-  const Cookie =  new Cookies()
+  const [, setUsers] = useLocalStorage('users')
+  const [, setSession] = useLocalStorage('session')
+  const history = useHistory()
   
   const login = e => {
     const detail = {}
@@ -41,19 +37,17 @@ export default function(props){
     })
     .end((err, res) => {
       if(!err && res.body){
-        Cookie.set('session', JSON.stringify(res.body.session))
-        Cookie.set('users', JSON.stringify( res.body.users))
-        dispatch(loginAction(res.body.session))
-        dispatch(usersAction({users: res.body.users}))
+        setSession(JSON.stringify(res.body.session))
+        setUsers(JSON.stringify(res.body.users))
+        history.push('/')
+        window.location.reload()
       } else {
-        Cookie.set('session')
         dispatch(loginAction({
           loggedIn: false,
           loginError: 'Something went wrong!'
         }))
       }
     })
-    history.push('/', '')
   }
   
   return (
