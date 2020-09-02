@@ -1,10 +1,10 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { createBrowserHistory } from 'history'
+import { Cookies } from 'react-cookie'
 import Request from 'superagent'
-import Config from 'APPSRC/app/appConfig'
-import Cookie from 'APPSRC/vendor/cookie'
 
+import Config from 'APPSRC/app/appConfig'
 import BasicInput from 'APPSRC/components/basicInput'
 
 import {
@@ -17,9 +17,11 @@ import {
 
 const history = createBrowserHistory()
 
+
 export default function(props){
   const dispatch = useDispatch()
   const state = useSelector(state => state.session)
+  const Cookie =  new Cookies()
   
   const login = e => {
     const detail = {}
@@ -31,7 +33,7 @@ export default function(props){
       detail[el.getAttribute('name')] = el.value
     })
     Request
-    .post(Config.endpoint('/users'))
+    .post(Config.endpoint)
     .set('Accept', 'application/json')
     .query({
       'username': detail.username,
@@ -39,12 +41,12 @@ export default function(props){
     })
     .end((err, res) => {
       if(!err && res.body){
-        Cookie.setItem('session', JSON.stringify(res.body.session))
-        Cookie.setItem('users', JSON.stringify( res.body.users))
+        Cookie.set('session', JSON.stringify(res.body.session))
+        Cookie.set('users', JSON.stringify( res.body.users))
         dispatch(loginAction(res.body.session))
         dispatch(usersAction({users: res.body.users}))
       } else {
-        Cookie.removeItem('session')
+        Cookie.set('session')
         dispatch(loginAction({
           loggedIn: false,
           loginError: 'Something went wrong!'

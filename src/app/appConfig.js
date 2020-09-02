@@ -1,8 +1,15 @@
+const pageSize = 10
+const apiRoot = '//localhost:3010'
+const query = '/api'
+const endPoint = apiRoot + query
+const postSummaryLength = 512
+const loadTimeSimMs = 2000
+
 
 export default {
-  pageSize: 10,
-  apiRoot: '//localhost:3010',
-  endpoint(path){return this.apiRoot + path},
-  postSummaryLength: 512,
-  loadTimeSimMs: 2000
+  pageSize,
+  apiRoot,
+  endpoint: endPoint,
+  postSummaryLength,
+  loadTimeSimMs,
 }

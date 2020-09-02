@@ -15,7 +15,8 @@ import UserEdit from 'APPSRC/views/users/edit'
 import {Counter} from 'APPSRC/features/counter/Counter'
 
 
-const routes = props => {
+// router
+export default function(props){
   
   return (
     <BrowserRouter>
@@ -35,16 +36,16 @@ const routes = props => {
             <Route exact path="/posts/:postId">
               <PostView />
             </Route>
-            <Route exact path="/user">
+            <Route exact path="/users">
               <UserList />
             </Route>
-            <Route exact path="/user/create">
+            <Route exact path="/users/create">
               <UserEdit />
             </Route>
-            <Route exact path="/user/:userId">
+            <Route exact path="/users/:userId">
               <UserView />
             </Route>
-            <Route exact path="/user/:userId/edit">
+            <Route exact path="/users/:userId/edit">
               <UserEdit />
             </Route>
             <Route exact path="/login">
@@ -59,5 +60,3 @@ const routes = props => {
     </BrowserRouter>
   )
 }
-
-export default routes

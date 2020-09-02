@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react' 
+import React, { useState } from 'react' 
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import useLocalStorage from 'react-use-localstorage'
 
 import BasicInput from 'APPSRC/components/basicInput'
 import { elemUtil } from 'APPSRC/utility'
@@ -32,6 +33,7 @@ export default function(props){
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
   const userId = useSelector(state => state.session.userId)
+  const [userStorage, setUserStorage] = useLocalStorage('user', {})
   
   const validateUser = e => {
     const util = elemUtil(e.target, constraints)
@@ -60,15 +62,17 @@ export default function(props){
     const error = validateUser(e)
     debugger
     if(!error){
-      dispatch(userAction({
+      // save in localstorage to save state 
+      // between browser calls
+      setUserStorage(JSON.stringify(Object.assign({
         blogName: util.getInputElement('blogName').value,
         userName: util.getInputElement('blogName').value,
         password: util.getInputElement('password').value,
         firstname: util.getInputElement('firstName').value,
         lastname: util.getInputElement('lastName').value,
         email: util.getInputElement('email').value,
-      }))
-      history.push(`/user/${userId}`)
+      }, user.image)))
+      history.push(`/users/${userId}`)
     }
   }
   

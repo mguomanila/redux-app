@@ -10,7 +10,7 @@ const credential = {
 
 // routers
 const pages = [
-  {route: 'users', title: 'users account'}
+  {route: 'api', title: 'users account'}
 ]
 
 // returns an array of key, value pairs
