@@ -50,11 +50,36 @@ const validate = (fieldVal, constraints=null) => {
 // pass node and constraints and returns
 // a validateField utility
 const elemUtil = (node, constraints=null) => {
-  const getInputElement = ref => (node[ref]
-    ? node[ref].querySelector('input')
-    : node.parentNode
-      .querySelector('[name='+ref+'] input')
-  )
+  
+  const tag = 'input'
+  const parent_node = node.parentNode
+  
+  const getInputElement = ref => {
+    
+    let child, parent
+    if(ref == tag || !ref){
+      child = node.querySelector(tag)
+      parent = parent_node.querySelector(tag)
+    } else {
+      child = node.querySelector('[name='+ref+'] input')
+      parent = parent_node.querySelector('[name='+ref+'] input')
+    }
+  
+    return child ? child
+      : parent ? parent
+        : parent_node.querySelector('[name='+ref+'] input')
+  }
+  
+  const getInputElementAll = ref => {
+    
+    const children = node.querySelectorAll(tag)
+    const parents = parent_node.querySelectorAll(tag)
+    
+    return children.length ? children
+      : parents.length ? parents
+        : parent_node.querySelectorAll(ref ? ref : tag)
+    
+  }
   
   // typeof name == 'string'
   // typeof override == 'object'
@@ -70,6 +95,7 @@ const elemUtil = (node, constraints=null) => {
   }
   
   return {
+    getInputElementAll,
     getInputElement,
     validateField
   }

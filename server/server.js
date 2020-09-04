@@ -58,13 +58,7 @@ const server = http.createServer((req, res) => {
                 name: credential.username,
                 userId: credential.userId,
               },
-              users: [{
-                username: 'marlon',
-                id: 1
-              }, {
-                username: 'admin',
-                id: 2
-              }],
+              users: [],
             }))
           } else {
             res.writeHead(201, headers['201'])

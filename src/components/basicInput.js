@@ -1,7 +1,15 @@
-import React, { useState } from 'react'
+import React, { /*useState*/ } from 'react'
 import classnames from 'classnames'
 import update from 'immutability-helper'
 
+const style = {
+  position: {
+    position: 'static'
+  },
+  color: {
+    color: '#aa0000'
+  }
+}
 
 export default function(props) {
   const { helptext, error } = props
@@ -16,7 +24,11 @@ export default function(props) {
         children: {$set: null}
       })}/>
       {props.children}
-      {error ? error.map((err, i) => (<aside key={i}style={{position: 'static'}}>{helptext || err.msg}</aside>)) : ""}
+      <aside style={style.position}>{
+        error 
+          ? error.map(el => el.msg + ', ')
+          : <span style={style.color}>{helptext}</span>
+      }</aside>
     </div>
   )
 }

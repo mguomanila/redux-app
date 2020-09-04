@@ -1,15 +1,20 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import classnames from 'classnames'
-import { reactLocalStorage } from 'reactjs-localstorage'
+import useLocalStorage from 'react-use-localstorage'
 
 
 export default function(props){
-  const state = useSelector(state => state.user)
-  const userId = useSelector(state => state.session.userId)
-  const user = reactLocalStorage.getObject('user', '{}')
+  const { userId } = useParams()
+  const user = useSelector(state => {
+    const index = state.user.users.findIndex(user => parseInt(user.userId) === parseInt(userId))
+  debugger
+    return index != -1 ? state.user.users[index]
+      : false
+  })
   
-  return userId ? (
+  return user ? (
     <div className={classnames({
       'user': true,
       'small': props.small
@@ -17,10 +22,13 @@ export default function(props){
       <img className={classnames({
         'profile-img': true,
         'small': props.small
-      })} src={user.profileImageData} />
+      })} src={user.profile} alt="" />
       <div className="user-meta">
         <strong>{user.blogName}</strong>
       </div>
+      <div className="user-meta">
+        <strong>{user.email}</strong>
+      </div>
     </div>
-  ) : ''
+  ) : <aside>no users</aside>
 }
