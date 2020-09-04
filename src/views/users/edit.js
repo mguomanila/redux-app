@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom'
 import BasicInput from 'APPSRC/components/basicInput'
 import { elemUtil } from 'APPSRC/utility'
 
+import md5 from 'md5'
+
 // actions
 import {
 //   edit as editAction,
@@ -62,8 +64,8 @@ export default function(props){
   
   const createUser = e => {
     e.preventDefault()
-    // todo: create hashing userID
-    const userId = state.users.length ? state.users[state.users.length-1].userId+1 : 1
+    const userId = md5(state.users.length)
+      .substring(0,5)
     const util = elemUtil(e.target)
     const error = validateUser(e)
     

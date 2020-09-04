@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import useLocalStorage from 'react-use-localstorage'
 import Request from 'superagent'
 
-import Config from 'APPSRC/app/appConfig'
+import config from 'APPSRC/app/appConfig'
 import BasicInput from 'APPSRC/components/basicInput'
 
 import {
@@ -29,7 +29,7 @@ export default function(props){
       detail[el.getAttribute('name')] = el.value
     })
     Request
-    .post(Config.endpoint)
+    .post(config.endpoint.login)
     .set('Accept', 'application/json')
     .query({
       'username': detail.username,
