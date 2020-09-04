@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react' 
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import useLocalStorage from 'react-use-localstorage'
 
 import BasicInput from 'APPSRC/components/basicInput'
 import { elemUtil } from 'APPSRC/utility'
@@ -35,8 +34,9 @@ export default function(props){
   const history = useHistory()
   const dispatch = useDispatch()
   const state = useSelector(state => state.user)
-  const [, setUsersStg] = useLocalStorage('users')
   const [users, setUsers] = useState(state.users)
+  const [userImg, setUserImg] = useState(state.defaultImg)
+  const [sizeExceeded, setImageOverload] = useState(false)
   
   const validateUser = e => {
     const util = elemUtil(e.target, constraints)
@@ -67,7 +67,6 @@ export default function(props){
     const util = elemUtil(e.target)
     const error = validateUser(e)
     
-    debugger
     if(!error){
       const user = {
         userId,
@@ -77,18 +76,12 @@ export default function(props){
         firstname: util.getInputElement('firstName').value,
         lastname: util.getInputElement('lastName').value,
         email: util.getInputElement('email').value,
-        profile: state.defaultImg,
+        profile: userImg,
       }
       dispatch(createAction(user))
       history.push(`/users/${userId}`)
     }
   }
-  
-  useEffect(() => {
-    debugger
-    // persist this data
-    setUsersStg(JSON.stringify(state.users))
-  }, [state.users.length])
   
   const chooseFile = e => {
     const util = elemUtil(e.target)
@@ -99,12 +92,10 @@ export default function(props){
   
   const imageLoadedHandler = e => {
     const imageSize = atob(decodeURI(e.target.result).replace(/^.*base64,/, '')).length
-    const sizeExceeded = imageSize > constraints.image.maxsize
-    dispatch(validateAction({sizeExceeded}))
-    if(!sizeExceeded){
-      dispatch(validateAction({
-        defaultImg: e.target.result
-      }))
+    const sizeOverload = imageSize > constraints.image.maxsize
+    setImageOverload(sizeOverload)
+    if(!sizeOverload){
+      setUserImg(e.target.result)
     }
   }
   
@@ -142,12 +133,12 @@ export default function(props){
         <div className="profile-image-container">
           <label>profile image</label>
           <img className="profile-img"
-            src={state.defaultImg}
+            src={userImg}
             alt="" />
           <BasicInput type="file"
             name="profileImage"
             onChange={userImageUpload}
-            helptext={state.sizeExceeded ? 'less than 1MB' : ''}>
+            helptext={sizeExceeded ? 'less than 1MB' : ''}>
             <button style={{width: 210, top: -10, left: -10}}
               onClick={chooseFile}>
               choose an image

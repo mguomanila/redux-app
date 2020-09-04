@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import classnames from 'classnames'
@@ -7,12 +7,17 @@ import useLocalStorage from 'react-use-localstorage'
 
 export default function(props){
   const { userId } = useParams()
-  const user = useSelector(state => {
-    const index = state.user.users.findIndex(user => parseInt(user.userId) === parseInt(userId))
-  debugger
-    return index != -1 ? state.user.users[index]
-      : false
-  })
+  const state = useSelector(state => state.user)
+  const user = (({users}) => {
+    const index = users.findIndex(user => user.userId == (userId || props.userId))
+    return index != -1 ? users[index] : false
+  })(state)
+  const [, setUsersStg] = useLocalStorage('users')
+  
+  useEffect(() => {
+    // persist data
+    setUsersStg(JSON.stringify(state.users))
+  }, [])
   
   return user ? (
     <div className={classnames({
@@ -30,5 +35,5 @@ export default function(props){
         <strong>{user.email}</strong>
       </div>
     </div>
-  ) : <aside>no users</aside>
+  ) : <aside>....</aside>
 }

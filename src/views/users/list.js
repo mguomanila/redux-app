@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom'
 import UserView from 'APPSRC/views/users/view'
 
 export default function(props){
-  const state = useSelector(state => state.user)
-  debugger
+  const users = useSelector(state => state.user.users)
   
+  debugger
   return (
     <ul className="user-list">
-      {state.users ? state.users.map(v => (
-        <li key={v.id}>
-          <Link to={`/users/${v.id}`}>
-            <UserView userId={v.id} small={true} />
+      {users ? users.map(v => (
+        <li key={v.userId}>
+          <Link to={`/users/${v.userId}`}>
+            <UserView userId={v.userId} small={true} />
           </Link>
         </li>
       )) : <aside>no users here...</aside>}
