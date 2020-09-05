@@ -20,23 +20,18 @@ export default function(props){
   const history = useHistory()
   
   const login = e => {
-    const detail = {}
+    const credential = {}
     e.preventDefault()
     e.stopPropagation()
     Array
     .from(e.target.querySelectorAll('input'))
     .forEach(el => {
-      detail[el.getAttribute('name')] = el.value
+      credential[el.getAttribute('name')] = el.value
     })
     Request
     .post(config.endpoint.login)
-    .set('Accept', 'application/json')
-    .query({
-      'username': detail.username,
-      'password': detail.password
-    })
+    .send(credential)
     .end((err, res) => {
-      console.log('login', err, res)
       if(!err && res.body){
         setSession(JSON.stringify(res.body.session))
         setUsers(JSON.stringify(res.body.users))
@@ -52,8 +47,6 @@ export default function(props){
   }
   
   return (
-    <>
-    {(state.loggedIn && <div className="jumbotron">hello {state.name} ... Welcome Back</div>) ||
     <form className="login-form"
       onSubmit={login}>
       
@@ -66,7 +59,6 @@ export default function(props){
           {state.loginError && <aside className="error">{state.loginError}</aside>}
         <button type="submit">Log In</button>
       </fieldset>
-    </form>}
-    </>
+    </form>
   )
 }

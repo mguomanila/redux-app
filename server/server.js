@@ -15,31 +15,12 @@ const headers = [
   {'Content-Type': 'text/html'},
 ]
  
-// returns an array of key, value pairs
-const parseReq = str => {
-  const data = {}
-  str.split('&&').forEach(tokens => {
-    const [key, val] = tokens.split('=')
-    data[key] = val
-  })
-  return ('username' in data) ? data : ''
-}
-
-const parseUrl = str => {
-  const data = {}
-  str.split('?')[1].split('&').forEach(tokens => {
-    const [key, val] = tokens.split('=')
-    data[key] = val
-  })
-  return ('username' in data) ? data : ''
-}
-
-const error_response = (req, res) => {
+const err_resp = (req, res) => {
   res.writeHead(201, headers[1])
   res.end('error')
 }
 
-const ok_response = (req, res) => {
+const ok_resp = (req, res) => {
   res.writeHead(200, headers[0])
   res.end(JSON.stringify({
     msg: 'user successfully created',
@@ -47,7 +28,7 @@ const ok_response = (req, res) => {
   }))
 }
 
-const login_response = (req, res, index) => {
+const login_resp = (req, res, index) => {
   res.writeHead(200, headers[0])
   res.end(JSON.stringify({
     session: {
@@ -66,26 +47,23 @@ const server = http.createServer((req, res) => {
   })
 
   const createUser = (req, res) => {
-    req.on('end', e => {
+    req.on('end', () => {
       const payload = JSON.parse(data)
       // todo: verification
       credential.push(payload)
-      ok_response(req, res)
+      ok_resp(req, res)
     })
   }
   
   const login = (req, res) => {
-    req.on('end', e => {
-      const v = parseReq(data) || parseUrl(lookup)
+    req.on('end', () => {
+      const v = JSON.parse(data)
       const index = credential.findIndex(c => c.password === v.password && c.username === v.username)
       
-      switch(index > -1){
-        case true:
-          login_response(req, res, index)
-          break
-        default:
-        error_response(req, res)
-      }
+      if(index > -1)
+        login_resp(req, res, index)
+      else
+        err_resp(req, res)
     })
   }
 
@@ -98,7 +76,7 @@ const server = http.createServer((req, res) => {
       createUser(req, res)
       break
     default:
-      error_response(req, res)
+      err_resp(req, res)
   }
   
 })

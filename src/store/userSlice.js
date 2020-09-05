@@ -17,15 +17,12 @@ export const usersSlice = createSlice({
   },
   reducers: {
     create: (state, {payload}) => {
-      // put new user in front of stack
-      // assumed newest user will be pulled more
-//       state.users = [payload, ...state.users]
       Request
       .post(config.endpoint.createuser)
       .send(payload)
       .end((err, res) => {
         // todo
-        console.log('createuser', err, res)
+//         console.log('createuser', err, res)
       })
     },
     edit: (state, {payload}) => {
