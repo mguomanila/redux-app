@@ -80,7 +80,7 @@ export default function(props){
         profile: userImg,
       }
       dispatch(createAction(user))
-      history.push(`/users/${userId}`)
+      history.push(`/login`)
     }
   }
   

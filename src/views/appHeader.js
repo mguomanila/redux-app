@@ -1,13 +1,20 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
+
+import {
+  logout as logoutAction
+} from 'APPSRC/store/sessionSlice'
 
 
 export default function(props){
+  const history = useHistory()
+  const dispatch = useDispatch()
   const session = useSelector(state => state.session)
   
   const logout = e => {
-    
+    dispatch(logoutAction())
+    history.push('/')
   }
   
   

@@ -1,18 +1,20 @@
 const http = require('http')
 const path = require('path')
   
-// confidential
-const credential = {
- username : 'admin',
- password : '123',
- userId: 2
+const credential = []
+const port = 3000
+
+const routes = {
+  login: 'login',
+  createuser: 'createuser'
 }
 
-// routers
-const pages = [
-  {route: 'api', title: 'users account'}
+const headers = [
+  {'content-type': 'application/json'},
+  {'content-type': 'text/plain'},
+  {'Content-Type': 'text/html'},
 ]
-
+ 
 // returns an array of key, value pairs
 const parseReq = str => {
   const data = {}
@@ -32,49 +34,74 @@ const parseUrl = str => {
   return ('username' in data) ? data : ''
 }
 
-const headers = {
-  '200': {'content-type': 'application/json'},
-  '201': {'content-type': 'text/plain'},
-  '100': {'Content-Type': 'text/html'}
+const error_response = (req, res) => {
+  res.writeHead(201, headers[1])
+  res.end('error')
 }
-  
+
+const ok_response = (req, res) => {
+  res.writeHead(200, headers[0])
+  res.end(JSON.stringify({
+    msg: 'user successfully created',
+    ok: true
+  }))
+}
+
+const login_response = (req, res, index) => {
+  res.writeHead(200, headers[0])
+  res.end(JSON.stringify({
+    session: {
+      loggedIn: true,
+    },
+    users: [credential[index]],
+  }))
+}
+
 const server = http.createServer((req, res) => {
   const lookup = path.basename(decodeURI(req.url))
-  pages.forEach(page => {
-    if(lookup.includes(page.route)){
-      let data = ''
-      req.on('data', chunk => {
-        data += chunk.toString()
-      })
-      req.on('end', e => {
-        let verify = parseReq(data)
-        verify = verify ? verify : parseUrl(lookup)
-        if('username' in verify && 'password' in verify){
-          if(verify['username'] == credential.username && verify['password'] == credential.password){
-            res.writeHead(200, headers['200'])
-            res.end(JSON.stringify({
-              session: {
-                loggedIn: true,
-                name: credential.username,
-                userId: credential.userId,
-              },
-              users: [],
-            }))
-          } else {
-            res.writeHead(201, headers['201'])
-            res.end('error')
-          }
-        } else {
-          res.writeHead(201, headers['201'])
-          res.end('error')
-        }
-      })
-    } else {
-      res.writeHead(201, headers['201'])
-      res.end('error')
-    }
+  let data = ''
+  
+  req.on('data', chunk => {
+    data += chunk.toString()
   })
+
+  const createUser = (req, res) => {
+    req.on('end', e => {
+      const payload = JSON.parse(data)
+      // todo: verification
+      credential.push(payload)
+      ok_response(req, res)
+    })
+  }
+  
+  const login = (req, res) => {
+    req.on('end', e => {
+      const v = parseReq(data) || parseUrl(lookup)
+      const index = credential.findIndex(c => c.password === v.password && c.username === v.username)
+      
+      switch(index > -1){
+        case true:
+          login_response(req, res, index)
+          break
+        default:
+        error_response(req, res)
+      }
+    })
+  }
+
+  // router
+  switch(lookup.split('?')[0]){
+    case routes.login:
+      login(req, res)
+      break
+    case routes.createuser:
+      createUser(req, res)
+      break
+    default:
+      error_response(req, res)
+  }
+  
 })
 
-server.listen(3000)
+server.listen(port)
 console.log('listening at port 3000...')

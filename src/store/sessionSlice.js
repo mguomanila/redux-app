@@ -12,7 +12,9 @@ export const counterSlice = createSlice({
       Object.assign(state, payload)
     },
     logout: state => {
-      state.context = { loggedIn: false }
+      Object.assign(state, {loggedIn: false})
+      reactLocalStorage.remove('session')
+      reactLocalStorage.remove('users')
     },
     editUser: state => {},
     createUser: state => {},

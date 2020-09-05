@@ -36,6 +36,7 @@ export default function(props){
       'password': detail.password
     })
     .end((err, res) => {
+      console.log('login', err, res)
       if(!err && res.body){
         setSession(JSON.stringify(res.body.session))
         setUsers(JSON.stringify(res.body.users))
