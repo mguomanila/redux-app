@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react' 
+import React, { useState } from 'react' 
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -12,7 +12,7 @@ import {
 //   edit as editAction,
   create as createAction,
   validate as validateAction
-} from 'APPSRC/features/users/slice'
+} from 'APPSRC/store/userSlice'
 
 const constraints = {
   username: {
@@ -36,7 +36,6 @@ export default function(props){
   const history = useHistory()
   const dispatch = useDispatch()
   const state = useSelector(state => state.user)
-  const [users, setUsers] = useState(state.users)
   const [userImg, setUserImg] = useState(state.defaultImg)
   const [sizeExceeded, setImageOverload] = useState(false)
   

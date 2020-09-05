@@ -7,7 +7,7 @@ import {
   incrementAsync,
   selectCount,
 } from './counterSlice';
-import styles from './Counter.module.css';
+import styles from './counterView.module.css';
 
 import BasicInput from 'APPSRC/components/basicInput'
 

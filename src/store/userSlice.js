@@ -18,7 +18,7 @@ export const usersSlice = createSlice({
     edit: (state, {payload}) => {
       if(payload.userId){
         const index = state.users.findIndex(usr => usr.userId === payload.userId)
-        if(index != -1){
+        if(index !== -1){
           state.users.splice(index, 1, Object.assign(state.users[index], payload.user))
         }
       }

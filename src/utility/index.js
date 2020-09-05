@@ -57,7 +57,7 @@ const elemUtil = (node, constraints=null) => {
   const getInputElement = ref => {
     
     let child, parent
-    if(ref == tag || !ref){
+    if(ref === tag || !ref){
       child = node.querySelector(tag)
       parent = parent_node.querySelector(tag)
     } else {

@@ -9,7 +9,7 @@ import BasicInput from 'APPSRC/components/basicInput'
 
 import {
   login as loginAction
-} from 'APPSRC/features/session/slice'
+} from 'APPSRC/store/sessionSlice'
 
 
 export default function(props){

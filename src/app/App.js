@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Route} from 'react-router-dom';
 import logo from './logo.svg';
-import { Counter } from '../features/counter/Counter';
+import { Counter } from '../store/counterView';
 import './App.css';
 
 function App() {

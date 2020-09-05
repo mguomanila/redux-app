@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import  'APPSRC/style/app.less'
 import App from 'APPSRC/app/main';
-import store from 'APPSRC/stores';
+import store from 'APPSRC/store';
 
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';

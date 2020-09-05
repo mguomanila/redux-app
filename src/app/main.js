@@ -12,8 +12,6 @@ import UserList from 'APPSRC/views/users/list'
 import UserView from 'APPSRC/views/users/view'
 import UserEdit from 'APPSRC/views/users/edit'
 
-import {Counter} from 'APPSRC/features/counter/Counter'
-
 
 // router
 export default function(props){
@@ -50,9 +48,6 @@ export default function(props){
             </Route>
             <Route exact path="/login">
               <Login />
-            </Route>
-            <Route exact path="/counter">
-              <Counter />
             </Route>
           </Switch>
         </AppLayout>

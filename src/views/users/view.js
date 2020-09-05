@@ -9,15 +9,15 @@ export default function(props){
   const { userId } = useParams()
   const state = useSelector(state => state.user)
   const user = (({users}) => {
-    const index = users.findIndex(user => user.userId == (userId || props.userId))
-    return index != -1 ? users[index] : false
+    const index = users.findIndex(user => user.userId === (userId || props.userId))
+    return index !== -1 ? users[index] : false
   })(state)
   const [, setUsersStg] = useLocalStorage('users')
   
   useEffect(() => {
     // persist data
     setUsersStg(JSON.stringify(state.users))
-  }, [])
+  })
   
   return user ? (
     <div className={classnames({

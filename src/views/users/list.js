@@ -6,7 +6,6 @@ import UserView from 'APPSRC/views/users/view'
 export default function(props){
   const users = useSelector(state => state.user.users)
   
-  debugger
   return (
     <ul className="user-list">
       {users ? users.map(v => (
