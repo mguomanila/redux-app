@@ -1,23 +1,14 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import classnames from 'classnames'
-import useLocalStorage from 'react-use-localstorage'
 
 
 export default function(props){
-  const { userId } = useParams()
-  const state = useSelector(state => state.user)
-  const user = (({users}) => {
-    const index = users.findIndex(user => user.userId === (userId || props.userId))
-    return index !== -1 ? users[index] : false
-  })(state)
-  const [, setUsersStg] = useLocalStorage('users')
-  
-  useEffect(() => {
-    // persist data
-    setUsersStg(JSON.stringify(state.users))
-  })
+  const profile = useSelector(state => state.user)
+  debugger
+  const userId = props.userId || useParams().userId
+  const user = profile.users.find(user => user.userId === userId)
   
   return user ? (
     <div className={classnames({
@@ -27,13 +18,16 @@ export default function(props){
       <img className={classnames({
         'profile-img': true,
         'small': props.small
-      })} src={user.profile} alt="" />
+      })} src={user.image} alt="" />
       <div className="user-meta">
         <strong>{user.blogName}</strong>
+      </div>
+      <div className="user-meta">
+        <strong>{user.username}</strong>
       </div>
       <div className="user-meta">
         <strong>{user.email}</strong>
       </div>
     </div>
-  ) : <aside>....</aside>
+  ) : ''
 }

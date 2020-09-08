@@ -1,23 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import useLocalStorage from 'react-use-localstorage'
-import Request from 'superagent'
 
-import config from 'APPSRC/app/appConfig'
 import BasicInput from 'APPSRC/components/basicInput'
 
 import {
-  login as loginAction
+  reqLogin as asyncLogin
 } from 'APPSRC/store/sessionSlice'
 
 
 export default function(props){
   const dispatch = useDispatch()
-  const state = useSelector(state => state.session)
-  const [, setUsers] = useLocalStorage('users')
-  const [, setSession] = useLocalStorage('session')
   const history = useHistory()
+  const state = useSelector(state => state.session)
   
   const login = e => {
     const credential = {}
@@ -28,23 +23,14 @@ export default function(props){
     .forEach(el => {
       credential[el.getAttribute('name')] = el.value
     })
-    Request
-    .post(config.endpoint.login)
-    .send(credential)
-    .end((err, res) => {
-      if(!err && res.body){
-        setSession(JSON.stringify(res.body.session))
-        setUsers(JSON.stringify(res.body.users))
-        history.push('/')
-        window.location.reload()
-      } else {
-        dispatch(loginAction({
-          loggedIn: false,
-          loginError: 'Something went wrong!'
-        }))
-      }
-    })
+    dispatch(asyncLogin(credential))
   }
+  
+  useEffect(() => {
+    if(state.loggedIn){
+      history.push('/')
+    }
+  }, [state.loggedIn])
   
   return (
     <form className="login-form"

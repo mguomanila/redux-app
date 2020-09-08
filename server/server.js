@@ -29,12 +29,16 @@ const ok_resp = (req, res) => {
 }
 
 const login_resp = (req, res, index) => {
+  const user_list = credential.map(user => ({
+    userId: user.userId,
+    username: user.username,
+    blogName: user.blogName,
+    image: user.image
+  }))
   res.writeHead(200, headers[0])
   res.end(JSON.stringify({
-    session: {
-      loggedIn: true,
-    },
-    users: [credential[index]],
+    session: credential[index],
+    users: user_list,
   }))
 }
 
@@ -52,6 +56,11 @@ const server = http.createServer((req, res) => {
       // todo: verification
       credential.push(payload)
       ok_resp(req, res)
+      console.log(
+        payload.userId,
+        payload.username, 
+        payload.password
+      )
     })
   }
   

@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
+import useLocalStorage from 'react-use-localstorage'
 
 import {
   logout as logoutAction
 } from 'APPSRC/store/sessionSlice'
+
+import {
+  create as userAction
+} from 'APPSRC/store/userSlice'
 
 
 export default function(props){
@@ -14,9 +19,7 @@ export default function(props){
   
   const logout = e => {
     dispatch(logoutAction())
-    history.push('/')
   }
-  
   
   return (
     <header className="app-header">
@@ -26,11 +29,11 @@ export default function(props){
       <section className="account-ctrl">
       {session.loggedIn ? (
         <Link to="/posts/create">
-          Hello {session.name}, welcome back!
+          Hello {session.username}, write something!
         </Link>
       ) : <Link to="/users/create">Join</Link>}
       {session.loggedIn ? 
-        <a onClick={logout}>Log Out</a>
+        <a href="/" onClick={logout}>Log Out</a>
       : <Link to="/login">Log In</Link>}
       </section>
     </header>

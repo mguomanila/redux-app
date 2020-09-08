@@ -12,7 +12,6 @@ import UserList from 'APPSRC/views/users/list'
 import UserView from 'APPSRC/views/users/view'
 import UserEdit from 'APPSRC/views/users/edit'
 
-
 // router
 export default function(props){
   

@@ -1,10 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { reactLocalStorage } from 'reactjs-localstorage'
+import Request from 'superagent'
 
+import config from 'APPSRC/app/appConfig'
+
+const initialState = {loggedIn: false}
 
 export const counterSlice = createSlice({
   name: 'session',
-  initialState: reactLocalStorage.getObject('session', {loggedIn: false}),
+  initialState: reactLocalStorage.getObject('session', initialState),
   reducers: {
     getPost: state => {},
     modifyPost: state => {},
@@ -12,21 +16,34 @@ export const counterSlice = createSlice({
       Object.assign(state, payload)
     },
     logout: state => {
-      Object.assign(state, {loggedIn: false})
-      reactLocalStorage.remove('session')
-      reactLocalStorage.remove('users')
+      reactLocalStorage.clear()
+      state = initialState
     },
-    editUser: state => {},
-    createUser: state => {},
-    search: state => {},
   }
 })
 
 export const {
   getPost, modifyPost,
   login, logout,
-  editUser, createUser,
-  search
 } = counterSlice.actions
+
+export const reqLogin = creds => dispatch => {
+  Request
+  .post(config.endpoint.login)
+  .send(creds)
+  .end((err, res) => {
+    if(!err && res.body){
+      reactLocalStorage.setObject('users', res.body.users)
+      const islogin = {loggedIn: true}
+      reactLocalStorage.setObject('session', Object.assign(islogin, res.body.session))
+      dispatch(login(islogin))
+    } else {
+      dispatch(login({
+        loginError: 'Something went wrong!'
+      }))
+    }
+  })
+  
+}
 
 export default counterSlice.reducer

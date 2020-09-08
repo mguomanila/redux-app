@@ -9,8 +9,7 @@ import md5 from 'md5'
 
 // actions
 import {
-//   edit as editAction,
-  create as createAction,
+  createUserAsync as createAction,
   validate as validateAction
 } from 'APPSRC/store/userSlice'
 
@@ -58,27 +57,27 @@ export default function(props){
       error = validity[fieldname].length || error
       dispatch(validateAction(validity))
     })
+    
     return error
   }
   
   const createUser = e => {
     e.preventDefault()
-    const userId = md5(state.users.length)
-      .substring(0,5)
     const util = elemUtil(e.target)
     const error = validateUser(e)
-    
+    const user = {
+      blogName: util.getInputElement('blogName').value,
+      username: util.getInputElement('username').value,
+      password: util.getInputElement('password').value,
+      firstname: util.getInputElement('firstName').value,
+      lastname: util.getInputElement('lastName').value,
+      email: util.getInputElement('email').value,
+      image: userImg,
+    }
+    const userId = md5(JSON.stringify(user))
+      .substring(0,5)
+    Object.assign(user, {userId})
     if(!error){
-      const user = {
-        userId,
-        blogName: util.getInputElement('blogName').value,
-        username: util.getInputElement('username').value,
-        password: util.getInputElement('password').value,
-        firstname: util.getInputElement('firstName').value,
-        lastname: util.getInputElement('lastName').value,
-        email: util.getInputElement('email').value,
-        profile: userImg,
-      }
       dispatch(createAction(user))
       history.push(`/login`)
     }
@@ -107,7 +106,12 @@ export default function(props){
     reader.readAsDataURL(file)
   }
   
-    debugger
+  const uploadButtonImage = {
+    width: 210, 
+    top: -10, 
+    left: -10
+  }
+  
   // noValidate disables native validation
   // to avoid react collisions with native state
   return (
@@ -140,7 +144,7 @@ export default function(props){
             name="profileImage"
             onChange={userImageUpload}
             helptext={sizeExceeded ? 'less than 1MB' : ''}>
-            <button style={{width: 210, top: -10, left: -10}}
+            <button style={uploadButtonImage}
               onClick={chooseFile}>
               choose an image
             </button>
