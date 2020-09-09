@@ -1,12 +1,14 @@
 const http = require('http')
 const path = require('path')
-  
-const credential = []
+
 const port = 3000
+const credential = []
+const posts = []
 
 const routes = {
   login: 'login',
-  createuser: 'createuser'
+  createuser: 'createuser',
+  posts: 'posts'
 }
 
 const headers = [
@@ -15,6 +17,7 @@ const headers = [
   {'Content-Type': 'text/html'},
 ]
  
+// private modules
 const err_resp = (req, res) => {
   res.writeHead(201, headers[1])
   res.end('error')
@@ -42,6 +45,7 @@ const login_resp = (req, res, index) => {
   }))
 }
 
+// server
 const server = http.createServer((req, res) => {
   const lookup = path.basename(decodeURI(req.url))
   let data = ''
@@ -82,6 +86,9 @@ const server = http.createServer((req, res) => {
       login(req, res)
       break
     case routes.createuser:
+      createUser(req, res)
+      break
+    case routes.posts:
       createUser(req, res)
       break
     default:

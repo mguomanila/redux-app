@@ -28,7 +28,8 @@ export default function(props){
   
   useEffect(() => {
     if(state.loggedIn){
-      history.push('/')
+      history.push('/users')
+      window.location.reload()
     }
   }, [state.loggedIn])
   
