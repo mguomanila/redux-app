@@ -2,7 +2,7 @@ import React from 'react'
 import ClassNames from 'classnames'
 
 
-const app = props => {
+export default function(props){
   // like ng-class, but for react
   const classes = ClassNames({
     'loader-container': true,
@@ -21,9 +21,3 @@ const app = props => {
     </div>
   )
 }
-
-app.propTypes = {
-  inline: PropTypes.bool
-}
-
-export default app

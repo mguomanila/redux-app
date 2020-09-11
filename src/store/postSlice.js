@@ -9,17 +9,21 @@ export const postSlice = createSlice({
   initialState: {
     posts: [],
     failed: [],
+    loading: true
   },
-  reducer: {
-    init: (state, {payload}) => {
-      state.posts = payload
+  reducers: {
+    initPost: (state, {payload}) => {
+      state.posts = payload || []
+      state.loading = false
     },
     post: (state, {payload}) => {
       const index = state.posts.findIndex(post => post.id == payload.id)
-      if(index)
+      if(index){
         state.posts = update(state.posts, {$splice: [[index, 1, payload]]})
-      else
+      } else{
         state.posts = update(state.posts, {$push: payload})
+      }
+      state.loading = false
     },
     failed: (state, {payload}) => {
       state.failed = update(state.failed, {$push: payload})
@@ -28,7 +32,7 @@ export const postSlice = createSlice({
 })
 
 export const{
-  post, failed
+  initPost, post, failed
 } = postSlice.actions
 
 // private actions
@@ -39,7 +43,7 @@ export const initAsync = () => dispatch => {
   .get(config.endpoint.posts)
   .end((err, res) => {
     if(res.ok){
-      dispatch(init(res.body.posts))
+      dispatch(initPost(res.body.posts))
     }
   })
 }
@@ -51,7 +55,7 @@ export const getPostAsync = id => dispatch => {
     .query({id})
     .end((err, res) => {
       if(res.ok){
-        dispatch(post({id, post: res.body.post}))
+        dispatch(post(res.body.post))
       }
     })
   }

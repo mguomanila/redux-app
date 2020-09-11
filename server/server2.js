@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 
-const port = 3000
+const port = process.env.PROXY_PORT || 3000
 const credential = []
 const posts = []
 
@@ -59,7 +59,7 @@ function createuser(req, res, next){
   }
 }
 
-function posts(req, res, next){
+function posts_post(req, res, next){
   const post = req.body
   if(post.id && post.msg){
     posts.push(post)
@@ -80,12 +80,14 @@ function post_get(req, res, next){
   }
 }
 
-app.use(express.json())
+app.use(express.json({
+  limit: "100mb"
+}))
 app.post('/api/login', login)
 app.post('/api/createuser', createuser)
 app.get('/api/posts', post_get)
-app.post('/api/posts', posts)
-app.put('/api/posts', posts)
+app.post('/api/posts', posts_post)
+app.put('/api/posts', posts_post)
 
 app.listen(port)
 console.log('express server listening in port ' + port)

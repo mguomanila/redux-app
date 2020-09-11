@@ -10,5 +10,6 @@ export default configureStore({
     counter: counterReducer,
     user: usersReducer,
     session: sessionReducer,
+    post: postReducer,
   },
 })
