@@ -41,7 +41,6 @@ export const initAsync = () => dispatch => {
   .get(config.endpoint.posts)
   .end((err, res) => {
     if(res && res.ok){
-      debugger
       dispatch(initPost(res.body.posts))
     } else {
       console.log(err)
