@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -26,12 +26,9 @@ export default function(props){
     dispatch(asyncLogin(credential))
   }
   
-  useEffect(() => {
-    if(state.loggedIn){
-      history.push('/users')
-      window.location.reload()
-    }
-  }, [state.loggedIn])
+  if(state.loggedIn){
+    history.push('/users')
+  }
   
   return (
     <form className="login-form"

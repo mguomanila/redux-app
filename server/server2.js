@@ -3,7 +3,12 @@ const app = express()
 
 const port = process.env.PROXY_PORT || 3000
 const credential = []
-const posts = []
+const posts = [
+{
+  postId: 1,
+  msg: 'this is test message'
+}
+]
 
 // routers middleware!
 function error(res, msg='', id=404){

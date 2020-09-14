@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react' 
 import { useSelector, useDispatch } from 'react-redux'
-import update from 'immutability-helper'
 import { useHistory } from 'react-router-dom'
-import ReactQuill from 'react-quill'
-import Moment from 'moment'
+import { useQuill } from 'react-quilljs'
+import update from 'immutability-helper'
 
 import BasicInput from 'APPSRC/components/basicInput'
 import Loader from 'APPSRC/components/loader'
@@ -14,6 +13,7 @@ import {
   initAsync as initAction,
 } from 'APPSRC/store/postSlice'
 
+
 const constraints = {
   title: {
     required: true,
@@ -21,7 +21,7 @@ const constraints = {
   }
 }
 
-export default function(props){
+export default props => {
   const history = useHistory()
   const dispatch = useDispatch()
   const [validity, setValidity] = useState({})
@@ -35,41 +35,32 @@ export default function(props){
   })
   const [post, setPost] = useState(_)
   const loading = useSelector(state => state.post.loading)
-  const { postId } = props
   
-  const init = () => {
-    debugger
-    if(postId){
-      dispatch(getPost(postId))
-    } else {
-      dispatch(initAction())
-    }
+  const { postId } = props
+  // initialize post 
+  if(postId){
+    dispatch(getPost(postId))
+  } else {
+    dispatch(initAction())
   }
-  init()
+  
   
   const submit = e => {
     e.preventDefault()
     const postBody = ''
-  }
-  
-  const titleChange = e => {
     setPost(update(post, {
       title: {$set: e.target.value}
     }))
   }
   
-  useEffect(() => {
-  })
-  
+//   createEditor()
   const Editor = {
-    placeholder: 'place your ideas here....',
     modules: {
-      toolbar: {
-        container: '#toolbar',
-      }
+      toolbar: "#toolbar"
     },
-    handleChange: e => {}
+    formats: ['bold', 'size', 'script']
   }
+  const { quill, quillRef } = useQuill()
   
   return (
     <form className="post-edit"
@@ -80,16 +71,9 @@ export default function(props){
           name="title"
           value={post.title}
           error={validity.title}
-          onChange={titleChange}
           placeholder="post title" />
-        <div className='rich-editor'>
-          <div id="toolbar"></div>
-          <ReactQuill theme="snow"
-            name=""
-//             value={Editor.value}
-//             onChange={Editor.handleChange}
-            placeholder={Editor.placeholder}
-            modules={Editor.modules} />
+        <div className="rich-editor">
+          <div ref={quillRef} />
         </div>
         <button type="submit">
           {state.edit ? 'Edit Post' : 'Create'}

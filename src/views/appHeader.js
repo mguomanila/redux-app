@@ -1,19 +1,13 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useHistory } from 'react-router-dom'
-import useLocalStorage from 'react-use-localstorage'
+import { Link } from 'react-router-dom'
 
 import {
   logout as logoutAction
 } from 'APPSRC/store/sessionSlice'
 
-import {
-  create as userAction
-} from 'APPSRC/store/userSlice'
-
 
 export default function(props){
-  const history = useHistory()
   const dispatch = useDispatch()
   const session = useSelector(state => state.session)
   
