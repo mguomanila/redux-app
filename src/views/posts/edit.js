@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react' 
 import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import update from 'immutability-helper'
+import Moment from 'moment'
 
 import BasicInput from 'APPSRC/components/basicInput'
 import Loader from 'APPSRC/components/loader'
@@ -10,8 +11,8 @@ import Blog from 'APPSRC/components/quill'
 
 import {
   getPostAsync as getPost,
-  initAsync as initAction,
   modifyPostAsync as postBlog,
+  removeNewId as removeIdAction
 } from 'APPSRC/store/postSlice'
 
 
@@ -27,50 +28,64 @@ export default props => {
   const history = useHistory()
   const dispatch = useDispatch()
   const [validity, setValidity] = useState({})
-  const [state, setState] = useState({
-    edit: false,
+  const { postId } = useParams()
+  const [mode, setMode] = useState({
+    edit: postId ? true : false,
     error: false
   })
-  const _ = useSelector(state => {
-    const index = state.post.posts.findIndex(post => post.id === props.id)
-    return state.post.posts[index] || {}
-  })
-  const [post, setPost] = useState(_)
-  const loading = useSelector(state => state.post.loading)
-  const { postId } = props
+  const [loading, setLoading] = useState(true)
+  
+  // handle posts here
+  // if no `postId` just create new post
+  // initialize post 
+  if(postId){
+    dispatch(getPost(postId))
+  }
+  // for new post `newId` will be created after
+  // successful query to the db
+  const newId = useSelector(state => state.post.newId)
+  const [post, setPost] = useState({})
   
   const submit = e => {
     e.preventDefault()
-    debugger
+    const error = {}
+    const util = elemUtil(e.target, constraints)
     const title = e.target['title'].value
     const msg = e.target.innerText.split('Create')[0].trim()
-    if(!state.edit){
-      // create blog!
-      dispatch(postBlog({ title, msg }))
+    error['title'] = util.validateField('title', title)
+    if(error.title.length){
+      setValidity(error)
     } else {
-      setPost(update(post, {
-        id: postId,
-        title,
-        msg
-      }))
+      setValidity({})
+      if(!mode.edit){
+        // create blog!
+        dispatch(postBlog({ title, msg,
+          date: Moment().format()
+        }))
+      } else {
+        // edit post
+        setPost(update(post, {
+          id: postId,
+          title,
+          msg
+        }))
+      }
     }
   }
   
   useEffect(() => {
-    // initialize post 
-    if(postId){
-      dispatch(getPost(postId))
-    } else {
-      dispatch(initAction())
-    }
-  }, [loading])
+    if(newId)
+      history.push(`/posts/${newId}`)
+    setLoading(false)
+    dispatch(removeIdAction())
+  }, [newId, history, dispatch])
   
   
   return (
     <form className="post-edit"
       onSubmit={submit}>
       {loading ? <Loader /> : ''}
-      <fieldset style={{display: loading || state.error ? 'none' : 'block'}}>
+      <fieldset style={{display: loading || mode.error ? 'none' : 'block'}}>
         <BasicInput type="text"
           name="title"
           value={post.title}
@@ -79,7 +94,7 @@ export default props => {
         <Blog name="blogPost"
           style={{width: 500, height: 300}}/>
         <button type="submit">
-          {state.edit ? 'Edit Post' : 'Create'}
+          {mode.edit ? 'Edit Post' : 'Create'}
         </button>
       </fieldset>
     </form>

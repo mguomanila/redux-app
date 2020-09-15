@@ -10,30 +10,31 @@ export const postSlice = createSlice({
   initialState: {
     posts: [],
     failed: [],
-    loading: true
   },
   reducers: {
     initPost: (state, {payload}) => {
       state.posts = payload || []
-      state.loading = false
     },
     post: (state, {payload}) => {
       const index = state.posts.findIndex(post => post.id === payload.id)
-      if(index){
+      if(index > -1){
         state.posts = update(state.posts, {$splice: [[index, 1, payload]]})
       } else{
-        state.posts = update(state.posts, {$push: payload})
+        state.newId = payload.id
+        state.posts = update(state.posts, {$push: [payload]})
       }
-      state.loading = false
     },
     failed: (state, {payload}) => {
-      state.failed = update(state.failed, {$push: payload})
+      state.failed = update(state.failed, {$push: [payload]})
+    },
+    removeNewId: state => {
+      state.newId = false
     }
   }
 })
 
 export const {
-  initPost, post, failed
+  initPost, post, failed, removeNewId
 } = postSlice.actions
 
 export const initAsync = () => dispatch => {
@@ -73,7 +74,7 @@ export const modifyPostAsync = blog => dispatch => {
       if(res.ok){
         dispatch(post(Object.assign(res.body, blog)))
       } else {
-        dispatch(failed({id: blog.id, err}))
+        dispatch(failed(err))
       }
     })
   }

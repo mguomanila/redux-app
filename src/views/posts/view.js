@@ -1,6 +1,10 @@
-import React from 'react' 
+import React  from 'react' 
+import { useSelector } from 'react-redux'
 
-const app = props => {
+
+export default props => {
+//   const { postId } = useParams()
+//   const post = useSelector()
   
   return (
     <div className="post-view-full">
@@ -8,6 +12,3 @@ const app = props => {
     </div>
   )
 }
-
-export default app
- 

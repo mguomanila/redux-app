@@ -69,13 +69,13 @@ function createuser(req, res, next){
 
 function posts_post(req, res, next){
   const post = req.body
+  post.id = md5(post.title+post.date).substring(0,5)
   if(post.msg && post.title){
-    post.id = md5(post.title).substring(0,5)
     posts.push(post)
     res.json({id: post.id})
     console.log(post.id, post.title)
   } else {
-    error(res, 'posting error')
+    error(res, {msg: 'posting error', id: post.id})
   }
 }
 

@@ -1,6 +1,6 @@
 import React from 'react' 
 
-const app = props => {
+export default props => {
   
   return (
     <div className="post-list">
@@ -8,5 +8,3 @@ const app = props => {
     </div>
   )
 }
-
-export default app
