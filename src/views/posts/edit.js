@@ -6,11 +6,12 @@ import update from 'immutability-helper'
 import BasicInput from 'APPSRC/components/basicInput'
 import Loader from 'APPSRC/components/loader'
 import { elemUtil } from 'APPSRC/utility'
-import Quill from 'APPSRC/components/quill'
+import Blog from 'APPSRC/components/quill'
 
 import {
   getPostAsync as getPost,
   initAsync as initAction,
+  modifyPostAsync as postBlog,
 } from 'APPSRC/store/postSlice'
 
 
@@ -20,6 +21,7 @@ const constraints = {
     minLength: 5
   }
 }
+
 
 export default props => {
   const history = useHistory()
@@ -35,17 +37,26 @@ export default props => {
   })
   const [post, setPost] = useState(_)
   const loading = useSelector(state => state.post.loading)
+  const { postId } = props
   
   const submit = e => {
     e.preventDefault()
-    const postBody = ''
-    setPost(update(post, {
-      title: {$set: e.target.value}
-    }))
+    debugger
+    const title = e.target['title'].value
+    const msg = e.target.innerText.split('Create')[0].trim()
+    if(!state.edit){
+      // create blog!
+      dispatch(postBlog({ title, msg }))
+    } else {
+      setPost(update(post, {
+        id: postId,
+        title,
+        msg
+      }))
+    }
   }
   
   useEffect(() => {
-    const { postId } = props
     // initialize post 
     if(postId){
       dispatch(getPost(postId))
@@ -65,7 +76,8 @@ export default props => {
           value={post.title}
           error={validity.title}
           placeholder="post title" />
-        <Quill style={{width: 500, height: 300}}/>
+        <Blog name="blogPost"
+          style={{width: 500, height: 300}}/>
         <button type="submit">
           {state.edit ? 'Edit Post' : 'Create'}
         </button>

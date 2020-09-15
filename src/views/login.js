@@ -28,6 +28,7 @@ export default function(props){
   
   if(state.loggedIn){
     history.push('/users')
+    window.location.reload()
   }
   
   return (

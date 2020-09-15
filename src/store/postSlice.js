@@ -62,18 +62,18 @@ export const getPostAsync = id => dispatch => {
   config.loadTimeSimMs ? setTimeout(req, config.loadTimeSimMs) : req()
 }
 
-export const modifyPostAsync = (newpost, id) => dispatch => {
-  const endpoint = id 
-    ? config.endpoint.posts + '/' + id 
+export const modifyPostAsync = blog => dispatch => {
+  const endpoint = blog.id 
+    ? config.endpoint.posts + '/' + blog.id 
     : config.endpoint.posts
   const req = () => {
-    Request[id ? 'put' : 'post'](endpoint)
-    .send(newpost)
+    Request[blog.id ? 'put' : 'post'](endpoint)
+    .send(blog)
     .end((err, res) => {
       if(res.ok){
-        dispatch(post({id, msg: newpost}))
+        dispatch(post(Object.assign(res.body, blog)))
       } else {
-        dispatch(failed({id, err}))
+        dispatch(failed({id: blog.id, err}))
       }
     })
   }

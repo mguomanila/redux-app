@@ -1,13 +1,16 @@
+const fs = require('fs')
+const md5 = require('md5')
 const express = require('express')
 const app = express()
 
 const port = process.env.PROXY_PORT || 3000
 const credential = []
 const posts = [
-{
-  postId: 1,
-  msg: 'this is test message'
-}
+  {
+    id: 1,
+    title: 'this a title',
+    msg: 'this is test message'
+  }
 ]
 
 // routers middleware!
@@ -66,9 +69,11 @@ function createuser(req, res, next){
 
 function posts_post(req, res, next){
   const post = req.body
-  if(post.id && post.msg){
+  if(post.msg && post.title){
+    post.id = md5(post.title).substring(0,5)
     posts.push(post)
-    res.json({msg: 'success'})
+    res.json({id: post.id})
+    console.log(post.id, post.title)
   } else {
     error(res, 'posting error')
   }
@@ -85,11 +90,19 @@ function post_get(req, res, next){
   }
 }
 
+function init(req, res, next){
+  const image = fs.readFileSync('./profileImageData.txt', 'utf-8')
+  res.json({image})
+}
+
+//  middleware
 app.use(express.json({
   limit: "100mb"
 }))
+
 app.post('/api/login', login)
 app.post('/api/createuser', createuser)
+app.get('/api/createuser', init)
 app.get('/api/posts', post_get)
 app.post('/api/posts', posts_post)
 app.put('/api/posts', posts_post)

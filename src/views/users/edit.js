@@ -1,4 +1,4 @@
-import React, { useState } from 'react' 
+import React, { useState, useEffect } from 'react' 
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -10,7 +10,8 @@ import md5 from 'md5'
 // actions
 import {
   createUserAsync as createAction,
-  validate as validateAction
+  validate as validateAction,
+  initAsync
 } from 'APPSRC/store/userSlice'
 
 const constraints = {
@@ -111,6 +112,15 @@ export default function(props){
     top: -10, 
     left: -10
   }
+  
+  useEffect(() => {
+    // init state
+    dispatch(initAsync())
+  })
+  
+  useEffect(() => {
+    setUserImg(state.defaultImg)
+  }, [state.defaultImg])
   
   // noValidate disables native validation
   // to avoid react collisions with native state

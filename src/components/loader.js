@@ -3,14 +3,6 @@ import ClassNames from 'classnames'
 
 
 export default props => {
-  const [progress, setProgress] = useState(0)
-  
-  const block = () => {
-    
-  }
-  
-//   setTimeout(block, 1000)
-  
   // like ng-class, but for react
   const classes = ClassNames({
     'loader-container': true,
@@ -26,7 +18,6 @@ export default props => {
         <aside></aside>
         <aside></aside>
         <aside></aside>
-        <progress max="100" value={progress}><span>{progress}%</span></progress>
       </div>
     </div>
   )

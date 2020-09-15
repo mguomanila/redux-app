@@ -48,17 +48,19 @@ export default props => {
     }
   }
   
-  useEffect(() => {
-    if(quill){
-      // add custom handler for Image upload
-      quill.getModule('toolbar')
-        .addHandler('image', selectLocalImage)
-    }
-  }, [quill])
+//   useEffect(() => {
+//     if(quill){
+//       add custom handler for Image upload
+//       quill.getModule('toolbar')
+//         .addHandler('image', selectLocalImage)
+//     }
+//   }, [quill])
   
   return (
     <div className="rich-editor" style={props.style}>
-      <div ref={quillRef} defaultValue={props.default}/>
+      <div ref={quillRef}   
+        defaultValue={props.default}
+        name={props.name}/>
       <div id="toolbar"/>
     </div>
   )
