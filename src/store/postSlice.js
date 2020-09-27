@@ -4,6 +4,14 @@ import Request from 'superagent'
 
 import config from 'APPSRC/app/appConfig'
 
+// post data structure
+// {
+//   id,
+//   userId,
+//   title,
+//   msg,
+// }
+
 
 export const postSlice = createSlice({
   name: 'post',

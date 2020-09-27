@@ -7,6 +7,17 @@ import config from 'APPSRC/app/appConfig'
 
 const defaultImg = null
 const users = reactLocalStorage.getObject('users', [])
+// user data structure
+// {
+//   userId,
+//   blogName,
+//   username,
+//   password,
+//   firstname,
+//   lastname,
+//   email,
+//   image
+// }
 
 export const userSlice = createSlice({
   name: 'admin',
@@ -30,9 +41,9 @@ export const initAsync = () => dispatch => {
   Request
   .get(config.endpoint.createuser)
   .end((err, res) => {
-    debugger
-    // todo: deal response here
-    dispatch(init(res.body))
+    if(err) console.log(err)
+    else
+      dispatch(init(res.body))
   })
 }
 

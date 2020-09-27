@@ -34,6 +34,7 @@ export default props => {
     error: false
   })
   const [loading, setLoading] = useState(true)
+  const userId = useSelector(state => state.session.userId)
   
   // handle posts here
   // if no `postId` just create new post
@@ -60,12 +61,14 @@ export default props => {
       if(!mode.edit){
         // create blog!
         dispatch(postBlog({ title, msg,
-          date: Moment().format()
+          date: Moment().valueOf(),
+          userId
         }))
       } else {
         // edit post
         setPost(update(post, {
           id: postId,
+          userId,
           title,
           msg
         }))

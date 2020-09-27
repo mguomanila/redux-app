@@ -5,6 +5,13 @@ import Request from 'superagent'
 import config from 'APPSRC/app/appConfig'
 
 const initialState = {loggedIn: false}
+// session data structure
+// {
+//   userId,
+//   username,
+//   blogName,
+//   image
+// }
 
 export const counterSlice = createSlice({
   name: 'session',
