@@ -36,7 +36,7 @@ export const {
 
 export const reqLogin = creds => dispatch => {
   Request
-  .post(config.endpoint.login)
+  .post(config.endpoint.glogin)
   .send(creds)
   .end((err, res) => {
     if(!err && res.body){
@@ -51,6 +51,10 @@ export const reqLogin = creds => dispatch => {
     }
   })
   
+}
+
+export const graphLogin = creds => dispatch => {
+  fetch(config.endpoint.graphql)
 }
 
 export default counterSlice.reducer

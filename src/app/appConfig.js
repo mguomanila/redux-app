@@ -6,14 +6,21 @@ const posts = apiRoot + '/posts'
 const postSummaryLength = 512
 const loadTimeSimMs = 2000
 
+// graphql
+const graphql = '//localhost:3010/graphql'
+const glogin = graphql + `?query={
+  
+}`
+
 
 export default {
   pageSize,
-  apiRoot,
+  apiRoot: graphql,
   endpoint: {
     login,
     createuser,
     posts,
+    glogin,
   },
   postSummaryLength,
   loadTimeSimMs,

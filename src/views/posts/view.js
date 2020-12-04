@@ -9,9 +9,6 @@ import Moment from 'moment'
 import Loader from 'APPSRC/components/loader'
 
 import {
-} from 'APPSRC/store/sessionSlice'
-
-import {
 } from 'APPSRC/store/userSlice'
 
 import {
@@ -25,12 +22,15 @@ export default props => {
   const session = useSelector(state => state.session)
   const user = useSelector(state => {
   })
-  const post = useSelector(state => {
+  const blog = useSelector(state => {
+    const index = state.post.posts.findIndex(blog => blog.id === postId)
+    return state.post.posts[index]
   })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   
   useEffect(() => {
-    setLoading(true)
+    if(loading)
+      setLoading(!loading)
   }, [loading])
   
   
@@ -39,19 +39,20 @@ export default props => {
     <li className="post-view-summary">
       <aside>
         <img className="profile-img small"
+          alt=""
           src={session.image} />
         <div className="post-metadata">
-          <strong>{post.title}</strong>
+          <strong>{blog.title}</strong>
           <span className="user-name">{session.username}</span>
-          <em>{Moment(post.date, 'x').format(DATEFORMAT)}</em>
+          <em>{Moment(blog.date, 'x').format(DATEFORMAT)}</em>
         </div>
       </aside>
-      <summary>{post.summary}</summary>&nbsp;
-      <Link to={`/posts/${post.id}`}>read more</Link>
+      <summary>{blog.summary}</summary>&nbsp;
+      <Link to={`/posts/${blog.id}`}>read more</Link>
       {
         user.id === session.id ? (
           <div>
-            <Link to={`/posts/${post.id}/edit`}>
+            <Link to={`/posts/${blog.id}/edit`}>
               <button>edit post</button>
             </Link>
           </div>
@@ -64,15 +65,16 @@ export default props => {
       <div className="post-view-container">
         <h2>
           <img className="profile-img"
+            alt=""
             src={user.image} />
           <div className="post-metadata">
-            <strong>{post.title}</strong>
+            <strong>{blog.title}</strong>
             <span className="user-name">{session.username}</span>
-            <em>{Moment(post.date, 'x').format(DATEFORMAT)}</em>
+            <em>{Moment(blog.date, 'x').format(DATEFORMAT)}</em>
           </div>
         </h2>
         <section className="post-body"
-          dangerouslySetInnerHTML={{__html: post.body}}>
+          dangerouslySetInnerHTML={{__html: blog.body}}>
         </section>
       </div>
     </div>

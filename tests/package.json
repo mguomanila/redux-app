@@ -1,0 +1,15 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "test redux-app the pro way",
+  "main": "main.js",
+  "scripts": {
+    "test": "mocha ./spec --require ./spec/helpers/chai.js --reporter spec"
+  },
+  "author": "mguo",
+  "license": "MIT",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.1.3"
+  }
+}
